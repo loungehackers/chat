@@ -10,6 +10,7 @@
 		<% if current_user %>
 			Welcome <%= current_user.name %>!
 			<%= link_to "Sign Out", signout_path %>
+			<pre><%= current_user.inspect %></pre>
 		<% else %>
 			<%= link_to "Sign in with Meetup", "/auth/meetup" %>
 		<% end %>

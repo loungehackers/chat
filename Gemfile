@@ -1,8 +1,9 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
+ruby '2.0.0'
 
 gem 'omniauth-meetup'
-gem 'dotenv'
-
+gem 'dotenv-rails', :groups => [:development, :test]
+gem 'tagged_logger'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
