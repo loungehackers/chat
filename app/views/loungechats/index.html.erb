@@ -1,0 +1,25 @@
+<h1>Listing loungechats</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @loungechats.each do |loungechat| %>
+      <tr>
+        <td><%= link_to 'Show', loungechat %></td>
+        <td><%= link_to 'Edit', edit_loungechat_path(loungechat) %></td>
+        <td><%= link_to 'Destroy', loungechat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Loungechat', new_loungechat_path %>
