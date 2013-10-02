@@ -7,17 +7,19 @@
 		<%= csrf_meta_tags %>
 	</head>
 	<body>
-		<% if current_user %>
-			Welcome <%= link_to current_user.name, "http://www.meetup.com/members/" << current_user.uid %>!
-			<%= link_to "Sign Out", signout_path %>
-		<% else %>
-			<%= link_to "Sign in with Meetup", "/auth/meetup" %>
-		<% end %>
-
+		<header>
+			<img src="http://img2.meetupstatic.com/906521611995523788/img/header/logo.png" height="30px">
+			<h1 style="line-height: 35px;">
+				LoungeChat
+			</h1>
+			<% if current_user %>
+				<aside class="user_info">
+					Welcome <strong><%=  current_user.name %></strong>,
+					<%= link_to "Sign Out", signout_path %>
+				</aside>
+			<% end %>
+		</header>
 		<%= yield %>
-User id: <%= current_user.uid %><br />
-STHLM id: 4019872<br />
-SVALL id: 6849142
 		<script src="//cdnjs.cloudflare.com/ajax/libs/spin.js/1.2.7/spin.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min.js"></script>

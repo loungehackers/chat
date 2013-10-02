@@ -1,2 +1,3 @@
-class Loungechat < ActiveRecord::Base
+class Loungechat
+
 end

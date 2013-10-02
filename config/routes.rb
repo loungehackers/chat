@@ -1,12 +1,13 @@
 LoungeChat2::Application.routes.draw do
-  resources :loungechats
   match "/auth/:provider/callback" => "sessions#create", via: [:get, :post]
   match "/signout" => "sessions#destroy", :as => :signout, via: [:get, :post]
+  match "/login" => "loungechats#login", via: :get
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'loungechats#index'
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
