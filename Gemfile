@@ -4,7 +4,7 @@ ruby '2.0.0'
 #gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'omniauth-meetup'
 gem 'dotenv-rails', :groups => [:development, :test]
-gem 'dotenv'
+gem 'dotenv' #TODO: Not used any more, kept around until I figure out how to remove a gem on heroku.
 gem 'tagged_logger'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
