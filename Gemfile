@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.0.0'
 
-#gem 'activeadmin', github: 'gregbell/active_admin'
+gem 'rails_serve_static_assets', :groups => :production
 gem 'omniauth-meetup'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'dotenv' #TODO: Not used any more, kept around until I figure out how to remove a gem on heroku.

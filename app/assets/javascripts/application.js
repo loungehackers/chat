@@ -14,3 +14,8 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+window.loungeChat = {};
+jQuery(document).ready(function(){
+	
+});
