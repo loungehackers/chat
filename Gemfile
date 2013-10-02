@@ -1,8 +1,10 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 ruby '2.0.0'
 
+#gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'omniauth-meetup'
 gem 'dotenv-rails', :groups => [:development, :test]
+gem 'dotenv'
 gem 'tagged_logger'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
