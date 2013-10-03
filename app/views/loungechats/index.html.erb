@@ -1,5 +1,5 @@
 <% if current_user %>
-  Welcome <%= link_to current_user.name, "http://www.meetup.com/members/" + current_user.uid %>!
+  Welcome <%= link_to current_user.name, "http://www.meetup.com/members/" << current_user.uid.to_s %>!
   <%= link_to "Sign Out", signout_path %>
   <footer>    
     User id: <%= current_user.uid %><br />
