@@ -3,8 +3,8 @@ ruby '2.0.0'
 
 gem 'rails_serve_static_assets', :groups => :production
 gem 'omniauth-meetup'
-gem 'dotenv-rails', :groups => [:development, :test]
-gem 'dotenv' #TODO: Not used any more, kept around until I figure out how to remove a gem on heroku.
+gem 'rMeetup'
+gem 'dotenv-rails'
 gem 'tagged_logger'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
