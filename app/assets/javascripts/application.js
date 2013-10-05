@@ -13,10 +13,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-
 //= require_tree .
-
-window.loungeChat = window.loungeChat || {};
-jQuery(document).ready(function(){
-	loungeChat();
-});

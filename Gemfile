@@ -46,8 +46,10 @@ end
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
-# Use unicorn as the app server
-gem 'unicorn'
+# Use puma as the app server
+gem 'redis'
+gem 'puma'
+gem 'tubesock'
 
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development

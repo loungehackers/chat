@@ -2,7 +2,24 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.container {
+.container_12 {
 	font-family: monospace;
-	padding: 15px;
+}
+.userlist.col { 
+	border-left: 1px solid white;
+	padding: 5px 10px;
+}
+.messagebox.row {
+	border-top: 1px solid white;
+	textarea {
+		-webkit-appearance: none;
+		border: none;
+		background: none;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+	}
 }

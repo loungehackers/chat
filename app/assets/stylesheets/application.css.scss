@@ -11,17 +11,21 @@
  *= require_self
  *= require_tree .
  */
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
 
+*, *:before, *:after {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+ }
 
 /*#######################################################################################################*/
 /*##################################                                    #################################*/
 /*##################################             CSS RESET              #################################*/
 /*##################################                                    #################################*/
 /*#######################################################################################################*/
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -70,11 +74,35 @@ table {
 
 /*#######################################################################################################*/
 /*##################################                                    #################################*/
+/*##################################               LAYOUT               #################################*/
+/*##################################                                    #################################*/
+/*#######################################################################################################*/
+/* Generic pane rules */
+body { margin: 0 }
+.row, .col { overflow: hidden; position: absolute; }
+.row { left: 0; right: 0; }
+.col { top: 0; bottom: 0; }
+
+/* Specific pane rules */
+.topbar.row { height: 60px; top: 0; }
+.body.row { top: 60px; bottom: 75px; }
+.content.col { left: 0; right: 200px; }
+.userlist.col { width: 200px; right: 0; }
+.messagebox.row { height: 75px; bottom: 0; }
+
+/* Fix scrolling */
+.scroll-x { overflow-x: auto; }
+.scroll-y { overflow-y: auto; }
+.scroll-x, .scroll-y { -webkit-overflow-scrolling: touch; }
+
+/*#######################################################################################################*/
+/*##################################                                    #################################*/
 /*##################################               HEADER               #################################*/
 /*##################################                                    #################################*/
 /*#######################################################################################################*/
 
-header {
+.topbar {
+	font-family: verdana, arial, helvetica, sans-serif;
 	img {
 		float: left;
 	}
@@ -89,7 +117,6 @@ header {
 		float: right;
 		line-height: 30px;
 	}
-	height: 30px;
 	padding: 15px 20px;
 	background: white;
 	color: #333;

@@ -7,7 +7,7 @@
 		<%= csrf_meta_tags %>
 	</head>
 	<body>
-		<header>
+		<header class="topbar row">
 			<img src="http://img2.meetupstatic.com/906521611995523788/img/header/logo.png" height="30px">
 			<h1 style="line-height: 35px;">
 				LoungeChat
@@ -22,7 +22,7 @@
 		<% unless current_user %>
 			<%= yield %>
 		<% else %>
-			<div class="container">
+			<div class="container_12">
 				<%= yield %>
 			</div>
 		<% end %>
