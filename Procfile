@@ -1,1 +1,1 @@
-web: rails server
+web: bundle exec rails server
