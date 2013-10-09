@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20131002192016) do
 
   create_table "users", force: true do |t|
     t.string   "provider"
-    t.string   "uid"
+    t.integer  "uid"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"

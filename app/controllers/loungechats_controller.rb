@@ -31,6 +31,13 @@ class LoungechatsController < ApplicationController
 				end
 			end
 
+			puts "username: " << current_user.name
+			Redis.new.sadd("chatusers", current_user.name)
+			message = "[LH:newlogin]" << Redis.new.smembers("chatusers").to_s
+			puts message
+			Redis.new.publish "chat", message
+
+
 			tubesock.onmessage do |m|
 				# pub the message when we get one
 				# note: this echoes through the sub above
@@ -39,6 +46,7 @@ class LoungechatsController < ApplicationController
 
 			tubesock.onclose do
 				# stop listening when client leaves
+				Redis.new.srem("chatusers", current_user.name)
 				redis_thread.kill
 			end
 		end

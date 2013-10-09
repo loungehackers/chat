@@ -1,8 +1,8 @@
 <% if current_user %>
 	<div class="body row">
-		<aside id="userlist" class="userlist col scroll-y">
-			<ul>
-				<li><span id="me"><%= current_user.name %></span></li>
+		<aside  class="userlist col scroll-y">
+			<ul id="userlist" data-me="<%= current_user.name %>">
+				<li><%= current_user.name %></li>
 			</ul>
 		</aside>
 
