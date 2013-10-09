@@ -41,7 +41,7 @@
 				$container.append($elem);
 			}
 			$("#userlist").replaceWith($container);
-			$output.append("-   " + newuser +" just logged in");
+			$output.append("- " + newuser +" just logged in<br />");
 		}
 	}
 	formatMessage = function(message) {
