@@ -55,7 +55,7 @@
 			var $output = $("#output");
 			console.log("message: ", message);
 			var matches = message.match(/(\[LH:)(\w+)(\])/);
-			if(matches.length > 0 && matches[1] == "[LH:") {
+			if(matches != undefined && matches != null && matches.length > 0 && matches[1] == "[LH:") {
 				var command = matches[2];
 				var argument = message.slice(command.length+5,message.length);
 				commands[command](argument,$output);
