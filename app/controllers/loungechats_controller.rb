@@ -47,6 +47,10 @@ class LoungechatsController < ApplicationController
 			tubesock.onclose do
 				# stop listening when client leaves
 				Redis.new.srem("chatusers", current_user.name)
+				message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
+				puts message
+				Redis.new.publish "chat", message
+
 				redis_thread.kill
 			end
 		end

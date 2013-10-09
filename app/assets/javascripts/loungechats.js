@@ -27,22 +27,42 @@
 	commands = [];
 	commands["login"] = function(argument,$output) {
 		if(argument){ 
+			console.dir(argument);
 			var divider = argument.indexOf(":");
+			var newuser = argument.slice(0,divider);
 			argument = argument.slice(divider+1,argument.length);
-			var newuser = argument.slice(2,divider+2);
-			var $container = $("#userlist").clone().empty();
-			var me = $container.data("me");
-			var members = $.parseJSON(argument);
-			var $mold = $("<li></li>");
-			var $elem;
-			for(var i=0; i < members.length; i++) {
-				$elem = $mold.clone().text(members[i]);
-				if(members[i] == me) $elem.addClass("user_me");
-				$container.append($elem);
-			}
-			$("#userlist").replaceWith($container);
+			replaceUserList(argument);
 			$output.append("- " + newuser +" just logged in<br />");
+			var $elem = $("<p></p>").addClass("output_login").text("- " + newuser +" just logged in");
+			$output.append($elem);
+
 		}
+	}
+
+	commands["logout"] = function(argument,$output) {
+		if(argument){
+			console.log(argument);
+			var divider = argument.indexOf(":");
+			var olduser = argument.slice(0,divider);
+			argument = argument.slice(divider+1,argument.length);
+			replaceUserList(argument);
+			var $elem = $("<p></p>").addClass("output_logout").text("- Bye bye " + olduser +"!");
+			$output.append($elem);
+		}
+	}
+
+	replaceUserList = function(argument) {
+		var $container = $("#userlist").clone().empty();
+		var me = $container.data("me");
+		var members = $.parseJSON(argument);
+		var $mold = $("<li></li>");
+		var $elem;
+		for(var i=0; i < members.length; i++) {
+			$elem = $mold.clone().text(members[i]);
+			if(members[i] == me) $elem.addClass("user_me");
+			$container.append($elem);
+		}
+		$("#userlist").replaceWith($container);
 	}
 	formatMessage = function(message) {
 		var me;
@@ -60,7 +80,8 @@
 				var argument = message.slice(command.length+5,message.length);
 				commands[command](argument,$output);
 			} else {
-				$output.append("" + event.data + "<br>");
+				var $elem = $("<p></p>").addClass("output_message").text(event.data);
+				$output.append($elem);
 
 			}
 			var output = $output[0];
