@@ -33,7 +33,7 @@ class LoungechatsController < ApplicationController
 
 			puts "username: " << current_user.name
 			Redis.new.sadd("chatusers", current_user.name)
-			message = "[LH:newlogin]" << Redis.new.smembers("chatusers").to_s
+			message = "[LH:newlogin]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
 			puts message
 			Redis.new.publish "chat", message
 
