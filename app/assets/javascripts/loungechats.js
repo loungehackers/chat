@@ -25,7 +25,7 @@
 		});
 	});
 	commands = [];
-	commands["newlogin"] = function(argument,$output) {
+	commands["login"] = function(argument,$output) {
 		if(argument){ 
 			var divider = argument.indexOf(":");
 			argument = argument.slice(divider+1,argument.length);
