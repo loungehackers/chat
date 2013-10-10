@@ -28,12 +28,13 @@ class LoungechatsController < ApplicationController
 				end
 			end
 
-			puts "username: " << current_user.name
-			Redis.new.sadd("chatusers", current_user.name)
-			message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
-			puts message
-			Redis.new.publish "chat", message
-
+			tubesock.onopen do
+				puts "username: " << current_user.name
+				Redis.new.sadd("chatusers", current_user.name)
+				message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
+				puts message
+				Redis.new.publish "chat", message
+			end
 
 			tubesock.onmessage do |m|
 				Redis.new.publish "chat", m

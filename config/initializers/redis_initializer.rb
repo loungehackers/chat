@@ -1,0 +1,1 @@
+Redis.new.del("chatusers") #empty userlist on startup.
