@@ -32,7 +32,6 @@
 			var newuser = argument.slice(0,divider);
 			argument = argument.slice(divider+1,argument.length);
 			replaceUserList(argument);
-			$output.append("- " + newuser +" just logged in<br />");
 			var $elem = $("<p></p>").addClass("output_login").text("- " + newuser +" just logged in");
 			$output.append($elem);
 
