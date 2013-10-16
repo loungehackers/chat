@@ -32,7 +32,7 @@
 			var newuser = argument.slice(0,divider);
 			argument = argument.slice(divider+1,argument.length);
 			replaceUserList(argument);
-			var $elem = $("<p></p>").addClass("output_login").text("- " + newuser +" just logged in");
+			var $elem = $("<p></p>").addClass("output_login").html("- " + newuser +" just logged in");
 			$output.append($elem);
 
 		}
@@ -45,7 +45,7 @@
 			var olduser = argument.slice(0,divider);
 			argument = argument.slice(divider+1,argument.length);
 			replaceUserList(argument);
-			var $elem = $("<p></p>").addClass("output_logout").text("- Bye bye " + olduser +"!");
+			var $elem = $("<p></p>").addClass("output_logout").html("- Bye bye " + olduser +"!");
 			$output.append($elem);
 		}
 	}
@@ -79,7 +79,9 @@
 				var argument = message.slice(command.length+5,message.length);
 				commands[command](argument,$output);
 			} else {
-				var $elem = $("<p></p>").addClass("output_message").text(event.data);
+				var me = $("#userlist").data("me");
+				message = message.replace(me, "<span class=\"output_highlight\">"+me+"</span>");
+				var $elem = $("<p></p>").addClass("output_message").html(message);
 				$output.append($elem);
 
 			}
