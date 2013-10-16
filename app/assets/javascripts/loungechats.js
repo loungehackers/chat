@@ -4,13 +4,24 @@
 	$(function() {
 		var socket;
 		var $textarea = $("form.chat textarea");
-		socket = new WebSocket("ws://" + window.location.host + "/chat");
+		var $output = $("#output");
+		connect();
+		socket.onopen = function(event) {
+			$output.append("<p></p>").addClass("output_login").text("Connection with chat server established.");
+		}
 		socket.onmessage = function(event) {
 			var $output, output;
 			if (event.data.length) {
 				handleMessage(event.data);
 			}
 		};
+		socket.onclose = function(event) {
+			$textarea.prop("disabled", true);
+			$output.append("<p></p>").addClass("output_logout").text("Lost connection with server, retrying connection...");
+			window.setTimeout(function(){
+				connect();
+			}, 5000);
+		}
 		$("body").on("submit", "form.chat", function(event) {
 			var $textarea;
 			event.preventDefault();
@@ -25,6 +36,9 @@
 			}
 		});
 	});
+	connect = function() {
+		socket = new WebSocket("ws://" + window.location.host + "/chat");
+	}
 	commands = [];
 	commands["login"] = function(argument,$output) {
 		if(argument){ 
