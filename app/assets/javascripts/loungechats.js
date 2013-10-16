@@ -5,7 +5,7 @@
 		var socket;
 		var $textarea = $("form.chat textarea");
 		var $output = $("#output");
-		connect();
+		socket = connect();
 		socket.onopen = function(event) {
 			$output.append("<p></p>").addClass("output_login").text("Connection with chat server established.");
 		}
@@ -37,7 +37,7 @@
 		});
 	});
 	connect = function() {
-		socket = new WebSocket("ws://" + window.location.host + "/chat");
+		return new WebSocket("ws://" + window.location.host + "/chat");
 	}
 	commands = [];
 	commands["login"] = function(argument,$output) {
