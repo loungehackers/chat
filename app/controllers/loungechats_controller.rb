@@ -1,3 +1,4 @@
+require "cgi"
 class LoungechatsController < ApplicationController
 
 	# GET /loungechats
@@ -38,10 +39,10 @@ class LoungechatsController < ApplicationController
 				Redis.new.sadd("chatusers", current_user.name)
 				message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
 				puts message
-				Redis.new.publish "chat", html_escape message
+				Redis.new.publish "chat", message
 
 				tubesock.onmessage do |m|
-					Redis.new.publish "chat", m
+					Redis.new.publish "chat", CGI::escapeHTML(m)
 				end
 
 				tubesock.onclose do
