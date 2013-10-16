@@ -131,17 +131,19 @@ body { margin: 0 }
 
 
 .login {
-	max-width: 40%;
+	width: 80%;
+	max-width: 400px;
 	background: white;
 	border: 1px solid #ccc;
 	color: #333;
 	text-align: center;
 	border-radius: 4px;
 	padding: 20px;
-	margin: 10% auto;
+	margin: 100px auto;
 	h1 {
 		font-size: 24px;
 		margin-bottom: 20px;
+		line-height: 1.4em;
 
 	}
 	p {
