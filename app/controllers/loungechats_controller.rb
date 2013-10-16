@@ -20,32 +20,36 @@ class LoungechatsController < ApplicationController
 
 	def chat
 		hijack do |tubesock|
-			redis_thread = Thread.new do
+			client_thread = Thread.new do
 				Redis.new.subscribe "chat" do |on|
 					on.message do |channel, message|
 						tubesock.send_data message
 					end
 				end
 			end
-
-			tubesock.onopen do
+			if not current_user
+				puts "not authed"
+				client_thread.kill
+				puts "redis thread killed"
+			else		
+				puts "authed"
 				puts "username: " << current_user.name
 				Redis.new.sadd("chatusers", current_user.name)
 				message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
 				puts message
 				Redis.new.publish "chat", message
-			end
 
-			tubesock.onmessage do |m|
-				Redis.new.publish "chat", m
-			end
+				tubesock.onmessage do |m|
+					Redis.new.publish "chat", m
+				end
 
-			tubesock.onclose do
-				Redis.new.srem("chatusers", current_user.name)
-				message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
-				puts message
-				Redis.new.publish "chat", message
-				redis_thread.kill
+				tubesock.onclose do
+					Redis.new.srem("chatusers", current_user.name)
+					message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
+					puts message
+					Redis.new.publish "chat", message
+					client_thread.kill
+				end
 			end
 		end
 	end
