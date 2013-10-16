@@ -3,6 +3,7 @@
 
 	$(function() {
 		var socket;
+		var $textarea = $("form.chat textarea");
 		socket = new WebSocket("ws://" + window.location.host + "/chat");
 		socket.onmessage = function(event) {
 			var $output, output;
@@ -17,9 +18,9 @@
 			socket.send(formatMessage($textarea.val()));
 			return $textarea.val(null);
 		});
-		$("form.chat textarea").focus;
-		return $("form.chat textarea").on("keyup", function(event) {
-			if (event.keyCode === 13 && !event.shiftKey) {
+		$textarea.focus;
+		return $textarea.on("keyup", function(event) {
+			if (event.keyCode === 13 && !event.shiftKey && $textarea.val().length != 0) {
 				return $("form.chat").submit();
 			}
 		});
