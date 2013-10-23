@@ -22,14 +22,14 @@ window.loungeChat = {};
 			if(loungeChat.chat)
 				loungeChat.chat.isOnline(false);
 			loungeChat.chat.addMessage(null, "Lost connection with server, retrying connection...", "logout");
-			// lc.connectionTimer = window.setTimeout(lc.connect, 5000);
+			lc.connectionTimer = window.setTimeout(lc.connect, 5000);
 		};
 	};
 	lc.connect = function() {
 		lc = window.loungeChat;
 		lc.socket = new WebSocket("ws://" + window.location.host + "/chat");
 		lc.registerHandlers();
-		lc.connectionTimer = window.setTimeout(lc.connect, 5000);
+		// lc.connectionTimer = window.setTimeout(lc.connect, 5000);
 	};
 	lc.commands = [];
 	lc.commands["login"] = function(argument) {
