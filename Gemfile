@@ -50,7 +50,7 @@ end
 gem 'redis'
 gem 'puma'
 gem 'tubesock'
-
+gem 'pry'
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
