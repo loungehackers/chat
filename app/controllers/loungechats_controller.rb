@@ -41,8 +41,9 @@ class LoungechatsController < ApplicationController
 				puts message
 				Redis.new.publish "chat", message
 
-				tubesock.onmessage do |m|
-					Redis.new.publish "chat", CGI::escapeHTML(m)
+				tubesock.onmessage do |messageFromClient|
+					message = current_user.name + ": " + messageFromClient
+					Redis.new.publish "chat", CGI::escapeHTML(message)
 				end
 
 				tubesock.onclose do

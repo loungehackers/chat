@@ -1,19 +1,19 @@
 <% if current_user %>
 	<div class="body row">
 		<aside  class="userlist col scroll-y">
-			<ul id="userlist" data-me="<%= current_user.name %>">
-				<li><%= current_user.name %></li>
+			<ul id="userlist" data-me="<%= current_user.name %>" data-bind="foreach:users">
+				<li data-bind="css: userStyle, text: name"></li>
 			</ul>
 		</aside>
 
-		<article id="output" class="content col scroll-y">
-
-		</article>
+		<div id="output" class="content col scroll-y" data-bind="foreach: {data: messages, afterAdd: scrollBottom}">
+			<p class="output" data-bind="css: type, text: message"></p>
+		</div>
 	</div>
 	
 	<footer class="messagebox row"> 
-		<form class="chat">
-			<textarea autofocus="autofocus" placeholder="Write your message, and press [Enter] to send."></textarea>
+		<form class="chat" data-bind="submit: postMessage">
+			<textarea autofocus="autofocus" data-bind="enable: isOnline, value: currentMessage, returnKey: postMessage" placeholder="Write your message, and press [Enter] to send or [Shift]+[Enter] for newline."></textarea>
 		</form>
 	</footer>
 <% end %>

@@ -1,15 +1,16 @@
+window.loungeChat = {};
+
 (function() {
-	window.loungeChat = {};
 	lc = window.loungeChat;
-	lc.elem = {};
 	lc.connectionTimer = "test";
 	lc.registerHandlers = function(){
 		lc = window.loungeChat;
 		socket = lc.socket;
 		socket.onopen = function(event) {
-			lc.elem.$textarea.prop("disabled", false);
-			var $elem = $("<p></p>").addClass("output_login").text("Connection with chat server established.");
-			lc.elem.$output.append($elem);
+			if(loungeChat.chat !== undefined) {
+				loungeChat.chat.isOnline(true);
+				loungeChat.chat.addMessage(null, "Connection with chat server established.", "login");
+			}
 			clearTimeout(lc.connectionTimer);
 		};
 		socket.onmessage = function(event) {
@@ -18,30 +19,28 @@
 			}
 		};
 		socket.onclose = function(event) {
-			lc.elem.$textarea.prop("disabled", true);
-			var $elem = $("<p></p>").addClass("output_logout").text("Lost connection with server, retrying connection...");
-			lc.elem.$output.append($elem);
+			if(loungeChat.chat)
+				loungeChat.chat.isOnline(false);
+			loungeChat.chat.addMessage(null, "Lost connection with server, retrying connection...", "logout");
 			lc.connectionTimer = window.setTimeout(lc.connect, 5000);
 		};
 	};
 	lc.connect = function() {
 		lc = window.loungeChat;
-		console.info("Connecting to websocket", lc.connectionTimer);
 		lc.socket = new WebSocket("ws://" + window.location.host + "/chat");
 		lc.registerHandlers();
-		// lc.connectionTimer = window.setTimeout(lc.connect, 5000);
+		lc.connectionTimer = window.setTimeout(lc.connect, 5000);
 	};
 	lc.commands = [];
 	lc.commands["login"] = function(argument) {
 		if(argument) {
 			console.dir(argument);
-			var divider = argument.indexOf(":");
-			var newuser = argument.slice(0,divider);
-			argument = argument.slice(divider+1,argument.length);
-			lc.replaceUserList(argument);
-			var $elem = $("<p></p>").addClass("output_login").html("- " + newuser +" just logged in");
-			window.loungeChat.elem.$output.append($elem);
-
+			var dividerPosition = argument.indexOf(":");
+			var newuserName = argument.slice(0,dividerPosition);
+			var theOtherUsers = argument.slice(dividerPosition+1,argument.length);
+			if(loungeChat.chat) {
+				loungeChat.chat.addUserByName(newuserName);
+			}
 		}
 	};
 
@@ -51,30 +50,13 @@
 			var divider = argument.indexOf(":");
 			var olduser = argument.slice(0,divider);
 			argument = argument.slice(divider+1,argument.length);
-			replaceUserList(argument);
-			var $elem = $("<p></p>").addClass("output_logout").html("- Bye bye " + olduser +"!");
-			window.loungeChat.elem.$output.append($elem);
+			if(loungeChat.chat)
+				loungeChat.chat.addMessage(null,"- Bye bye " + olduser +"!", "logout");
 		}
 	};
 
-	lc.replaceUserList = function(argument) {
-		/* TODO: Refactor me later, extract members into window.loungeChat */
-		var $container = $("#userlist").clone().empty();
-		var me = $container.data("me");
-		var members = $.parseJSON(argument);
-		var $mold = $("<li></li>");
-		var $elem;
-		for(var i=0; i < members.length; i++) {
-			$elem = $mold.clone().text(members[i]);
-			if(members[i] == me) $elem.addClass("user_me");
-			$container.append($elem);
-		}
-		$("#userlist").replaceWith($container);
-	};
-	lc.formatMessage = function(message) {
-		var me;
-		me = $("#userlist").data("me");
-		return me + ": " + message;
+	lc.postMessage = function(message) {
+		window.loungeChat.socket.send(message);
 	};
 
 	lc.handleMessage = function(message) {
@@ -84,16 +66,12 @@
 			if(matches !== undefined && matches !== null && matches.length > 0 && matches[1] == "[LH:") {
 				var command = matches[2];
 				var argument = message.slice(command.length+5,message.length);
-				lc.commands[command](argument,window.loungeChat.elem.$output);
+				lc.commands[command](argument);
 			} else {
 				var me = $("#userlist").data("me");
-				message = message.replace(me, "<span class=\"output_highlight\">"+me+"</span>");
-				var $elem = $("<p></p>").addClass("output_message").html(message);
-				window.loungeChat.elem.$output.append($elem);
-
+				if(loungeChat.chat)
+					loungeChat.chat.addMessage(me, message, "message");
 			}
-			var output = window.loungeChat.elem.$output[0];
-			output.scrollTop = output.scrollHeight;
 			
 		}
 	};
@@ -101,22 +79,76 @@
 
 	//INITIALIZER, let me come last please.
 	$(function() {
-		lc.elem.$textarea = $("form.chat textarea");
-		lc.elem.$output = $("#output");
 		lc.connect();
 		lc.registerHandlers();
-		$("body").on("submit", "form.chat", function(event) {
-			event.preventDefault();
-			lc.elem.$textarea = $(this).find("textarea");
-			lc.socket.send(lc.formatMessage(lc.elem.$textarea.val()));
-			return lc.elem.$textarea.val(null);
-		});
-		lc.elem.$textarea.focus();
-		return lc.elem.$textarea.on("keyup", function(event) {
-			if (event.keyCode === 13 && !event.shiftKey && lc.elem.$textarea.val().length !== 0) {
-				return $("form.chat").submit();
-			}
-		});
 	});
 
 }).call(this);
+
+function userViewModel(name) {
+	var self = this;
+	self.name = ko.observable(name);
+	self.userStyle = ko.observable();
+}
+
+function messageViewModel(sender, message, type) {
+	var self = this;
+	self.sender = ko.observable(sender);
+	self.message = ko.observable(message);
+	self.type = ko.observable("output_"+type);  //logout, login, message 
+	
+}
+
+function chatViewModel() {
+	var self = this;
+	self.messages = ko.observableArray();
+	self.users = ko.observableArray();
+	self.currentMessage = ko.observable();
+	self.currentMessageHasFocus = ko.observable(true);
+	self.isOnline = ko.observable(false);
+
+	self.postMessage = function(message) {
+		loungeChat.postMessage(self.currentMessage());
+		self.currentMessage("");
+		
+	};
+	self.addMessage = function(sender, message, type) {
+		self.messages.push(new messageViewModel(sender, message, type));			
+	};
+	self.addUserByName = function(name) {
+		self.users.push(new userViewModel(name));
+		self.addMessage("", "- " + name + " just logged in", "login");
+	};
+	self.removeUserByName = function(name) {
+		var match = ko.utils.arrayFirst(self.users(), function(item) {
+			return name === item.name;
+		});
+		if (!match) {
+			self.users.remove(match);
+		}
+	};
+	self.scrollBottom = function(element, index, data) {
+		if (element.nodeType === 1) {
+			element = element.parentNode;			
+			element.scrollTop = element.scrollHeight;
+		}
+	};
+}
+$(document).ready(function() {
+	loungeChat.chat = new chatViewModel();
+
+	ko.bindingHandlers.returnKey = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			ko.utils.registerEventHandler(element, 'keydown', function(evt) {
+				if (evt.keyCode === 13 && !evt.shiftKey && $(evt.target).val().length !== 0) {
+					evt.preventDefault();
+					evt.target.blur();
+					valueAccessor().call(viewModel, bindingContext.$data);
+					evt.target.focus();
+				}
+			});
+		}
+	};
+
+	ko.applyBindings(loungeChat.chat);
+});
