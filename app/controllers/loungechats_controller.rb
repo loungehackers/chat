@@ -24,7 +24,6 @@ class LoungechatsController < ApplicationController
 			client_thread = Thread.new do
 				Redis.new.subscribe "chat" do |on|
 					on.message do |channel, message|
-						message.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "")
 						tubesock.send_data message
 					end
 				end
@@ -43,6 +42,7 @@ class LoungechatsController < ApplicationController
 				Redis.new.publish "chat", message
 
 				tubesock.onmessage do |messageFromClient|
+					messageFromClient.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "")
 					message = current_user.name + ": " + messageFromClient
 					Redis.new.publish "chat", CGI::escapeHTML(message)
 				end
