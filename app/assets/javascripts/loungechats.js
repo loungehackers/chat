@@ -34,12 +34,11 @@ window.loungeChat = {};
 	lc.commands = [];
 	lc.commands["login"] = function(argument) {
 		if(argument) {
-			console.dir(argument);
 			var dividerPosition = argument.indexOf(":");
 			var newuserName = argument.slice(0,dividerPosition);
-			var theOtherUsers = argument.slice(dividerPosition+1,argument.length);
+			var theOtherUsers = $.parseJSON(argument.slice(dividerPosition+1,argument.length));
 			if(loungeChat.chat) {
-				loungeChat.chat.addUserByName(newuserName);
+				loungeChat.chat.addUserByName(newuserName, theOtherUsers);
 			}
 		}
 	};
@@ -106,6 +105,14 @@ function chatViewModel() {
 	self.currentMessage = ko.observable();
 	self.currentMessageHasFocus = ko.observable(true);
 	self.isOnline = ko.observable(false);
+	self.sortedUsers = ko.dependentObservable(function() {
+		return this.users.slice().sort(this.sortUsersFunction);
+	}, self);
+
+
+	self.sortUsersFunction = function(a, b) {
+        return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;  
+	};
 
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
@@ -115,10 +122,33 @@ function chatViewModel() {
 	self.addMessage = function(sender, message, type) {
 		self.messages.push(new messageViewModel(sender, message, type));			
 	};
-	self.addUserByName = function(name) {
-		self.users.push(new userViewModel(name));
-		self.addMessage("", "- " + name + " just logged in", "login");
+	self.getUserByName = function(username) {
+		return ko.utils.arrayFirst(self.users(), function (user) {
+			return user.name() === username ? user : null;
+        });
 	};
+	self.addUserByName = function(name, serverUsers) {
+		if(!self.getUserByName(name)) {
+			self.users.push(new userViewModel(name));
+			self.addMessage("", "- " + name + " just logged in", "login");
+		}
+		self.syncUserByNames(serverUsers);
+	};
+
+	self.syncUserByNames = function(serverUsers) {
+		console.log("syncUserByNames");
+		window.serverUsers = serverUsers;
+		if(serverUsers instanceof String){
+			console.log("was string");
+			serverUsers = [serverUsers];
+		}
+		console.dir(serverUsers);
+		for (var i = 0; i < serverUsers.length; i++) {
+			if(!self.getUserByName(serverUsers[i])){
+				self.users.push(new userViewModel(serverUsers[i]));
+			}
+		}
+    };
 	self.removeUserByName = function(name) {
 		var match = ko.utils.arrayFirst(self.users(), function(item) {
 			return name === item.name;
