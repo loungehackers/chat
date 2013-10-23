@@ -35,3 +35,8 @@
 .yardoc
 _yardoc
 doc/
+
+
+
+#OS and Editor temp files
+.DS_Store
