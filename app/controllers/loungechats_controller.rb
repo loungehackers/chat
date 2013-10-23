@@ -51,8 +51,11 @@ class LoungechatsController < ApplicationController
 					Redis.new.srem("chatusers", current_user.name)
 					message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
 					puts message
+					session.destroy
+					puts "killing session"
 					Redis.new.publish "chat", message
 					client_thread.kill
+
 				end
 			end
 		end
