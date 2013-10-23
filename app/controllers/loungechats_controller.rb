@@ -24,7 +24,7 @@ class LoungechatsController < ApplicationController
 			client_thread = Thread.new do
 				Redis.new.subscribe "chat" do |on|
 					on.message do |channel, message|
-						message.encode!('UTF-16', :undef => :replace, :invalid => :replace, :replace => "")
+						message.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "")
 						tubesock.send_data message
 					end
 				end
