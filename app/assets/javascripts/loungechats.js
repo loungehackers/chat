@@ -45,12 +45,11 @@ window.loungeChat = {};
 
 	lc.commands["logout"] = function(argument) {
 		if(argument){
-			console.log(argument);
-			var divider = argument.indexOf(":");
-			var olduser = argument.slice(0,divider);
-			argument = argument.slice(divider+1,argument.length);
+			var dividerPosition = argument.indexOf(":");
+			var olduserName = argument.slice(0,dividerPosition);
+			var theOtherUsers = $.parseJSON(argument.slice(dividerPosition+1,argument.length));
 			if(loungeChat.chat)
-				loungeChat.chat.addMessage(null,"- Bye bye " + olduser +"!", "logout");
+				loungeChat.chat.removeUserByName(olduserName, theOtherUsers);
 		}
 	};
 
@@ -136,26 +135,23 @@ function chatViewModel() {
 	};
 
 	self.syncUserByNames = function(serverUsers) {
-		console.log("syncUserByNames");
-		window.serverUsers = serverUsers;
 		if(serverUsers instanceof String){
-			console.log("was string");
 			serverUsers = [serverUsers];
 		}
-		console.dir(serverUsers);
 		for (var i = 0; i < serverUsers.length; i++) {
 			if(!self.getUserByName(serverUsers[i])){
 				self.users.push(new userViewModel(serverUsers[i]));
 			}
 		}
     };
-	self.removeUserByName = function(name) {
-		var match = ko.utils.arrayFirst(self.users(), function(item) {
-			return name === item.name;
-		});
-		if (!match) {
-			self.users.remove(match);
+	self.removeUserByName = function(name, serverUsers) {
+		var userToRemove = getUserByName(name);
+		if (userToRemove) {
+			self.users.remove(userToRemove);
+			self.addMessage("","- Bye bye " + userToRemove.name +"!", "logout");
 		}
+		self.syncUserByNames(serverUsers);
+
 	};
 	self.scrollBottom = function(element, index, data) {
 		if (element.nodeType === 1) {
