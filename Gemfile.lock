@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:StefanWallin/tubesock.git
+  revision: 21faf50ecfca843fd67e4a2270bb0ae27f23befb
+  specs:
+    tubesock (0.2.2)
+      rack (>= 1.5.0)
+      websocket (>= 1.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -139,9 +147,6 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    tubesock (0.2.2)
-      rack (>= 1.5.0)
-      websocket (>= 1.1.0)
     turbolinks (1.3.0)
       coffee-rails
     tzinfo (0.3.37)
@@ -170,6 +175,6 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   sdoc
   sqlite3
-  tubesock
+  tubesock!
   turbolinks
   uglifier (>= 1.3.0)
