@@ -42,9 +42,10 @@ class LoungechatsController < ApplicationController
 				Redis.new.publish "chat", message
 
 				tubesock.onmessage do |messageFromClient|
-					messageFromClient.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "")
+					messageFromClient.force_encoding(Encoding::UTF_8)
 					message = current_user.name + ": " + messageFromClient
 					Redis.new.publish "chat", CGI::escapeHTML(message)
+
 				end
 
 				tubesock.onclose do

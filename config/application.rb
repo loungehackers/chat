@@ -19,7 +19,8 @@ module LoungeChat2
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    Encoding.default_external = "UTF-8"
-    config.encoding = "utf-8"
+    Encoding.default_internal = Encoding::UTF_8
+    Encoding.default_external = Encoding::UTF_8
+    config.encoding = Encoding::UTF_8
   end
 end
