@@ -29,3 +29,16 @@ this repo as follows:
   $ git config --global filter.tabspace.clean=expand --tabs=2 --initial</code></pre>
 
 
+Setup the application
+=====================
+Create a file '.env' in the root of the application with the following key value pairs:
+<pre><code>  meetup_api_key= [obtain from meetup.com]
+  meetup_api_secret= [obtain from meetup.com]
+  secret_key_base= [128 character random key]</code></pre>
+
+Then just run bundle, run the migrations and start the rails server
+<pre><code>  $ bundle install
+  $ rake db:migrate
+  $ bundle exec rails server -p 3000</code></pre>
+
+Now you'll have a local instance running on port 3000
