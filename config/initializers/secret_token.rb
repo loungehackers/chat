@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-LoungeChat2::Application.config.secret_key_base = 'de8f17bced9d6c0a7382a7950eec6b54c638baa770069069378a69aeaae30bdfdc75c74192df8bee6be0427af98aae55e28448c1c9ad967db2ef15ec206fc285'
+LoungeChat2::Application.config.secret_key_base = ENV['secret_key_base']
