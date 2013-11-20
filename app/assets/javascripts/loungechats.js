@@ -119,7 +119,8 @@ function chatViewModel() {
 		
 	};
 	self.addMessage = function(sender, message, type) {
-		self.messages.push(new messageViewModel(sender, message, type));			
+		self.messages.push(new messageViewModel(sender, message, type));
+		newExcitingAlerts();			
 	};
 	self.getUserByName = function(username) {
 		return ko.utils.arrayFirst(self.users(), function (user) {
@@ -178,3 +179,22 @@ $(document).ready(function() {
 
 	ko.applyBindings(loungeChat.chat);
 });
+
+newExcitingAlerts = (function () {
+  var oldTitle = document.title;
+  var msg = "New!";
+  var timeoutId;
+  var blink = function() { document.title = document.title == msg ? ' ' : msg; };
+  var clear = function() {
+    clearInterval(timeoutId);
+    document.title = oldTitle;
+    window.onmousemove = null;
+    timeoutId = null;
+  };
+  return function () {
+    if (!timeoutId) {
+      timeoutId = setInterval(blink, 1000);
+      window.onmousemove = clear;
+    }
+  };
+}());
