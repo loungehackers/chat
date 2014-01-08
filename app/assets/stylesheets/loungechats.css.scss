@@ -22,9 +22,15 @@
 		bottom: 0;
 		right: 0;
 
-		&::-webkit-input-placeholder {  rgba(255, 255, 255, 0.18); }
-		&::-moz-placeholder {  rgba(255, 255, 255, 0.18); } /* firefox 19+ */
-		&:-ms-input-placeholder {  rgba(255, 255, 255, 0.18); } /* ie */
+		&::-webkit-input-placeholder {  /* chrome, safari et.c. */
+			color: rgba(255, 255, 255, 0.18);
+		}
+		&::-moz-placeholder { /* firefox 19+ */
+			color: rgba(255, 255, 255, 0.18);
+		}
+		&:-ms-input-placeholder {  /* ie */
+			color: rgba(255, 255, 255, 0.18);
+		}
 	}
 }
 
