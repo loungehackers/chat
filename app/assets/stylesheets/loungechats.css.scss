@@ -21,6 +21,10 @@
 		left: 0;
 		bottom: 0;
 		right: 0;
+
+		&::-webkit-input-placeholder {  rgba(255, 255, 255, 0.18); }
+		&::-moz-placeholder {  rgba(255, 255, 255, 0.18); } /* firefox 19+ */
+		&:-ms-input-placeholder {  rgba(255, 255, 255, 0.18); } /* ie */
 	}
 }
 
