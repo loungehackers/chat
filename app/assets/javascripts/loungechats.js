@@ -68,8 +68,12 @@ window.loungeChat = {};
 			} else {
 				var me = $("#userlist").data("me");
 				if(loungeChat.chat) {
+					var date = new Date();
+					var timestamp = "[" + date.toLocaleTimeString() + "] ";
+					date = null;
 					var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 					message = message.replace(exp,"<a href='$1' target=\"_blank\">$1</a>");
+					message = timestamp + message
 					loungeChat.chat.addMessage(me, message, "message");
 				}
 			}
