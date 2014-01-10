@@ -44,12 +44,19 @@ window.loungeChat = {};
 	};
 
 	lc.commands["logout"] = function(argument) {
-		if(argument){
+		if(argument) {
 			var dividerPosition = argument.indexOf(":");
 			var olduserName = argument.slice(0,dividerPosition);
 			var theOtherUsers = $.parseJSON(argument.slice(dividerPosition+1,argument.length));
 			if(loungeChat.chat)
 				loungeChat.chat.removeUserByName(olduserName, theOtherUsers);
+		}
+	};
+
+	lc.commands["history"] = function(argument) {
+		if(argument) {
+			if(loungeChat.chat)
+				loungeChat.chat.addMessage("", argument, "history");
 		}
 	};
 

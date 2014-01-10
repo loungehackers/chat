@@ -1,6 +1,6 @@
 require "cgi"
 class LoungechatsController < ApplicationController
-
+	@@num_history_lines = 4
 	# GET /loungechats
 	def index
 		redirect_to login_path unless current_user
@@ -21,6 +21,8 @@ class LoungechatsController < ApplicationController
 
 	def chat
 		hijack do |tubesock|
+
+			# Set up so we can send messages to this chat client.
 			client_thread = Thread.new do
 				Redis.new.subscribe "chat" do |on|
 					on.message do |channel, message|
@@ -30,30 +32,42 @@ class LoungechatsController < ApplicationController
 			end
 
 			if not current_user
-				puts "not authed"
+				# User not properly authed
 				client_thread.kill
-				puts "redis thread killed"
-			else		
-				puts "authed"
-				puts "username: " << current_user.name
-				Redis.new.sadd("chatusers", current_user.name)
-				message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
-				puts message
-				Redis.new.publish "chat", message
-
-				tubesock.onmessage do |messageFromClient|
-					messageFromClient.force_encoding(Encoding::UTF_8)
-					message = current_user.name + ": " + messageFromClient
-					Redis.new.publish "chat", CGI::escapeHTML(message)
-
+			else
+				# Loading history		
+				for i in 0..@@num_history_lines
+					message = Redis.new.lindex("history", @@num_history_lines-i)
+					
+					# Sending over socket instead of publishing, otherwise
+					# everyone would get history when a new user joins.
+					tubesock.send_data "[LH:history]" + message
 				end
 
+				# Adding username to list of users & publishing join.
+				Redis.new.sadd("chatusers", current_user.name)
+				message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
+				Redis.new.publish "chat", message
+
+				# Registering this socket to listen on messages from the client.
+				tubesock.onmessage do |messageFromClient|
+					#Sanitizing the message
+					messageFromClient.force_encoding(Encoding::UTF_8)
+					message = CGI::escapeHTML(current_user.name + ": " + messageFromClient)
+
+					# Publishing the message to the chat room
+					Redis.new.publish "chat", message
+
+					# Saving message in the history
+					Redis.new.lpush("history", message)
+					Redis.new.ltrim("history", 0, @@num_history_lines)
+				end
+
+				# Clean up after logout or timeout.
 				tubesock.onclose do
 					Redis.new.srem("chatusers", current_user.name)
 					message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
-					puts message
 					session.destroy
-					puts "killing session"
 					Redis.new.publish "chat", message
 					client_thread.kill
 
