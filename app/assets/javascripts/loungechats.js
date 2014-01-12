@@ -159,10 +159,10 @@ function chatViewModel() {
 		}
     };
 	self.removeUserByName = function(name, serverUsers) {
-		var userToRemove = getUserByName(name);
+		var userToRemove = self.getUserByName(name);
 		if (userToRemove) {
 			self.users.remove(userToRemove);
-			self.addMessage("","- Bye bye " + userToRemove.name +"!", "logout");
+			self.addMessage("","- Bye bye " + userToRemove.name() +"!", "logout");
 		}
 		self.syncUserByNames(serverUsers);
 

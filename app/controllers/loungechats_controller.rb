@@ -1,6 +1,6 @@
 require "cgi"
 class LoungechatsController < ApplicationController
-	@@num_history_lines = 4
+	@@num_history_lines = 50
 	# GET /loungechats
 	def index
 		redirect_to login_path unless current_user
@@ -35,13 +35,14 @@ class LoungechatsController < ApplicationController
 				# User not properly authed
 				client_thread.kill
 			else
+				puts current_user.name + " has joined";
 				# Loading history		
 				for i in 0..@@num_history_lines
 					message = Redis.new.lindex("history", @@num_history_lines-i)
 					
 					# Sending over socket instead of publishing, otherwise
 					# everyone would get history when a new user joins.
-					tubesock.send_data "[LH:history]" + message
+					tubesock.send_data "[LH:history]" + message if message 
 				end
 
 				# Adding username to list of users & publishing join.
@@ -64,11 +65,12 @@ class LoungechatsController < ApplicationController
 				end
 
 				# Clean up after logout or timeout.
-				tubesock.onclose do
+				tubesock.onclose do |closeCause|
+					puts closeCause + " for " + current_user.name
 					Redis.new.srem("chatusers", current_user.name)
 					message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
-					session.destroy
 					Redis.new.publish "chat", message
+					session.destroy
 					client_thread.kill
 
 				end
