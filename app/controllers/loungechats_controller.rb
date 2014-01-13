@@ -33,6 +33,7 @@ class LoungechatsController < ApplicationController
 
 			if not current_user
 				# User not properly authed
+				session.destroy
 				client_thread.kill
 			else
 				puts current_user.name + " has joined";
@@ -65,8 +66,7 @@ class LoungechatsController < ApplicationController
 				end
 
 				# Clean up after logout or timeout.
-				tubesock.onclose do |closeCause|
-					puts closeCause + " for " + current_user.name
+				tubesock.onclose
 					Redis.new.srem("chatusers", current_user.name)
 					message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
 					Redis.new.publish "chat", message
