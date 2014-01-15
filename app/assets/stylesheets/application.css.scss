@@ -95,6 +95,11 @@ body { margin: 0 }
 .scroll-y { overflow-y: auto; }
 .scroll-x, .scroll-y { -webkit-overflow-scrolling: touch; }
 
+
+.hidden {
+	display: none !important;
+}
+
 /*#######################################################################################################*/
 /*##################################                                    #################################*/
 /*##################################               HEADER               #################################*/
@@ -121,7 +126,45 @@ body { margin: 0 }
 	padding: 15px 20px;
 	background: white;
 	color: #333;
+
 }
+.settings {	
+		.settings-handle {
+			&:hover {
+				color: #333;
+			}
+			/* Absolute position to fix nudging issue on expand */
+			position: absolute;
+			top: 0;
+			right: 0;
+			
+			color: #ddd;
+			font-size: 3em;
+			display: block;
+			text-align: right;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+		.settings-content {
+			li {
+				padding: 9px 15px;
+				border-bottom: 1px solid #D3D3D3;
+			}
+			top: 40px;
+			right: -14px;
+			background: #FFF;
+			position: relative;
+		}
+		position: absolute;
+		right: 14px;
+		top: 19px;
+		z-index: 1;
+	}
 
 /*#######################################################################################################*/
 /*##################################                                    #################################*/

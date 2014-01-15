@@ -114,6 +114,7 @@ function chatViewModel() {
 	self.currentMessage = ko.observable();
 	self.currentMessageHasFocus = ko.observable(true);
 	self.isOnline = ko.observable(false);
+	self.settingsDialogHidden = ko.observable(true);
 	self.sortedUsers = ko.dependentObservable(function() {
 		return this.users.slice().sort(this.sortUsersFunction);
 	}, self);
@@ -172,6 +173,9 @@ function chatViewModel() {
 			element = element.parentNode;			
 			element.scrollTop = element.scrollHeight;
 		}
+	};
+	self.toggleSettingsDialog = function () { 
+		self.settingsDialogHidden(!self.settingsDialogHidden()) 
 	};
 }
 $(document).ready(function() {
