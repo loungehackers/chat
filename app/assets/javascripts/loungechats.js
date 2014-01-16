@@ -122,7 +122,7 @@ function chatViewModel() {
 
 
 	self.sortUsersFunction = function(a, b) {
-        return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;  
+        return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;
 	};
 
 	self.postMessage = function(message) {
@@ -133,7 +133,7 @@ function chatViewModel() {
 	self.addMessage = function(sender, message, type) {
 		var date = new Date();
 		var timestamp = "[" + date.toLocaleTimeString() + "] ";
-		message = timestamp + message
+		message = timestamp + message;
 		self.messages.push(new messageViewModel(sender, message, type));
 		if(self.setting_flashTitle()) flashTitle();
 	};
@@ -171,7 +171,7 @@ function chatViewModel() {
 	};
 	self.scrollBottom = function(element, index, data) {
 		if (element.nodeType === 1) {
-			element = element.parentNode;			
+			element = element.parentNode;
 			element.scrollTop = element.scrollHeight;
 		}
 	};
