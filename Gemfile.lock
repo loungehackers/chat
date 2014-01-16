@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:StefanWallin/tubesock.git
-  revision: c0527f14344a5a27a03ec893e3fbe84032752445
+  revision: a4e7862754dc923f23be235b023d9c350724e8f0
   specs:
     tubesock (0.2.2)
       rack (>= 1.5.0)
