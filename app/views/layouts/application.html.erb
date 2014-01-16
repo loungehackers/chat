@@ -21,6 +21,21 @@
 			<menu class="settings">
 				<span class="settings-handle" data-bind="click: toggleSettingsDialog, css: { active: !settingsDialogHidden()}">&#9881;</span>
 				<ul class="settings-content" data-bind="css: { hidden: settingsDialogHidden }">
+<!-- 					<li>
+						<label for="desktop_notif">
+							Desktop notifications: <input id="desktop_notif" class="setting" type="checkbox" data-bind="">
+						</label>
+					</li>
+ -->					<li>
+						<label for="flash_title_notif">
+							Title flashing notification: <input id="flash_title_notif" class="setting" type="checkbox" data-bind="checked: setting_flashTitle">
+						</label>
+					</li>
+<!-- 					<li>
+						<label for="audio_notif">
+							Audio notifications: <input id="audio_notif" class="setting" type="checkbox" data-bind="checked: setting_audio_notif">
+						</label>
+					</li> -->
 					<li><%= link_to "Sign Out", signout_path %></li>
 				</ul>
 			</menu>

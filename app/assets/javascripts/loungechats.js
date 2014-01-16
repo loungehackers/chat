@@ -115,6 +115,7 @@ function chatViewModel() {
 	self.currentMessageHasFocus = ko.observable(true);
 	self.isOnline = ko.observable(false);
 	self.settingsDialogHidden = ko.observable(true);
+	self.setting_flashTitle = ko.observable(true, {persist: 'setting_flashTitle'});
 	self.sortedUsers = ko.dependentObservable(function() {
 		return this.users.slice().sort(this.sortUsersFunction);
 	}, self);
@@ -134,7 +135,7 @@ function chatViewModel() {
 		var timestamp = "[" + date.toLocaleTimeString() + "] ";
 		message = timestamp + message
 		self.messages.push(new messageViewModel(sender, message, type));
-		newExcitingAlerts();			
+		if(self.setting_flashTitle()) flashTitle();
 	};
 	self.getUserByName = function(username) {
 		return ko.utils.arrayFirst(self.users(), function (user) {
@@ -174,8 +175,8 @@ function chatViewModel() {
 			element.scrollTop = element.scrollHeight;
 		}
 	};
-	self.toggleSettingsDialog = function () { 
-		self.settingsDialogHidden(!self.settingsDialogHidden()) 
+	self.toggleSettingsDialog = function () {
+		self.settingsDialogHidden(!self.settingsDialogHidden());
 	};
 }
 $(document).ready(function() {
@@ -197,7 +198,7 @@ $(document).ready(function() {
 	ko.applyBindings(loungeChat.chat);
 });
 
-newExcitingAlerts = (function () {
+flashTitle = (function () {
   var oldTitle = document.title;
   var msg = "New!";
   var timeoutId;
