@@ -1,6 +1,7 @@
 GIT
   remote: git@github.com:StefanWallin/tubesock.git
-  revision: a4e7862754dc923f23be235b023d9c350724e8f0
+  revision: 776e07cd7eb4372ae399dc990287c8577bbf68a3
+  branch: exception_handling
   specs:
     tubesock (0.2.2)
       rack (>= 1.5.0)
