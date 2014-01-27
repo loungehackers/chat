@@ -66,7 +66,6 @@ window.loungeChat = {};
 
 	lc.handleMessage = function(message) {
 		if(message !== undefined && message.length > 0) {
-			console.log("message: ", message);
 			var matches = message.match(/(\[LH:)(\w+)(\])/);
 			if(matches !== undefined && matches !== null && matches.length > 0 && matches[1] == "[LH:") {
 				var command = matches[2];
@@ -185,7 +184,6 @@ function chatViewModel() {
 	self.audio_notif = function () {
 		if(self.audioplaying !== true && self.audio !== undefined) {
 			self.audioplaying = true;
-			console.info("start playing");
 			self.audio.play();
 		}
 	};
@@ -213,7 +211,6 @@ function chatViewModel() {
 			self.audioplaying = false;
 
 			self.audio.addEventListener('ended', function() {
-				console.info("stopped playing");
 				self.audioplaying = false;
 				self.audio.load();
 			});
