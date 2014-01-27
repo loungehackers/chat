@@ -183,18 +183,7 @@ function chatViewModel() {
 		self.settingsDialogHidden(!self.settingsDialogHidden());
 	};
 	self.audio_notif = function () {
-		if(self.audio === undefined || self.audio === null) {
-			self.audio = document.getElementById("audio_notif_sound");
-			self.audio.load();
-		}
-
-		self.audio.addEventListener('ended', function() {
-			self.audioplaying = false;
-			console.info("stopped playing");
-		});
-
-		if(self.audioplaying !== true) {
-			self.audio.load();
+		if(self.audioplaying !== true && self.audio !== undefined) {
 			self.audioplaying = true;
 			console.info("start playing");
 			self.audio.play();
@@ -218,6 +207,19 @@ function chatViewModel() {
 			}
 		};
 	};
+	self.initAudio = function() {
+		if(self.audio === undefined || self.audio === null) {
+			self.audio = document.getElementById("audio_notif_sound");
+			self.audioplaying = false;
+
+			self.audio.addEventListener('ended', function() {
+				console.info("stopped playing");
+				self.audioplaying = false;
+				self.audio.load();
+			});
+		}
+	};
+	initAudio();
 }
 $(document).ready(function() {
 	loungeChat.chat = new chatViewModel();
