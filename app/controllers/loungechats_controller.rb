@@ -66,7 +66,8 @@ class LoungechatsController < ApplicationController
 				end
 
 				# Clean up after logout or timeout.
-				tubesock.onclose do |closecause|
+				tubesock.onclose do |closeCause|
+					closeCause = "unknown" if closeCause.nil?
 					if current_user.nil? or tubesock.closed?
 						puts "already closed"
 					else
