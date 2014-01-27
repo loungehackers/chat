@@ -116,6 +116,7 @@ function chatViewModel() {
 	self.isOnline = ko.observable(false);
 	self.settingsDialogHidden = ko.observable(true);
 	self.setting_flashTitle = ko.observable(true, {persist: 'setting_flashTitle'});
+	self.setting_audio_notif = ko.observable(true, {persist: 'setting_audio_notif'});
 	self.sortedUsers = ko.dependentObservable(function() {
 		return this.users.slice().sort(this.sortUsersFunction);
 	}, self);
@@ -136,6 +137,7 @@ function chatViewModel() {
 		message = timestamp + message;
 		self.messages.push(new messageViewModel(sender, message, type));
 		if(self.setting_flashTitle()) flashTitle();
+		if(self.setting_audio_notif()) audio_notif();
 	};
 	self.getUserByName = function(username) {
 		return ko.utils.arrayFirst(self.users(), function (user) {
@@ -198,7 +200,7 @@ $(document).ready(function() {
 	ko.applyBindings(loungeChat.chat);
 });
 
-flashTitle = (function () {
+var flashTitle = (function () {
   var oldTitle = document.title;
   var msg = "New!";
   var timeoutId;
@@ -215,4 +217,11 @@ flashTitle = (function () {
       window.onmousemove = clear;
     }
   };
-}());
+})();
+
+var audio_notif = (function () {
+	var audio = document.getElementById("audio_notif_sound");
+	audio.currentTime = 0; //Rewinding the audio snippet.
+	audio.play();
+
+})();
