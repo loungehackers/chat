@@ -126,8 +126,8 @@ function chatViewModel() {
         return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;
 	};
 	self.close_chat = function() {
-		loungeChat.socket.close()
-	}
+		loungeChat.socket.close();
+	};
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
 		self.currentMessage("");
@@ -138,8 +138,8 @@ function chatViewModel() {
 		var timestamp = "[" + date.toLocaleTimeString() + "] ";
 		message = timestamp + message;
 		self.messages.push(new messageViewModel(sender, message, type));
-		if(self.setting_flashTitle()) flashTitle();
-		if(self.setting_audio_notif()) audio_notif();
+		if(self.setting_flashTitle()) self.flashTitle();
+		if(self.setting_audio_notif()) self.audio_notif();
 	};
 	self.getUserByName = function(username) {
 		return ko.utils.arrayFirst(self.users(), function (user) {
@@ -182,6 +182,29 @@ function chatViewModel() {
 	self.toggleSettingsDialog = function () {
 		self.settingsDialogHidden(!self.settingsDialogHidden());
 	};
+	self.audio_notif = function () {
+		var audio = document.getElementById("audio_notif_sound");
+		audio.currentTime = 0; //Rewinding the audio snippet.
+		audio.play();
+	};
+	self.flashTitle = function () {
+		var oldTitle = document.title;
+		var msg = "New!";
+		var timeoutId;
+		var blink = function() { document.title = document.title == msg ? ' ' : msg; };
+		var clear = function() {
+			clearInterval(timeoutId);
+			document.title = oldTitle;
+			window.onmousemove = null;
+			timeoutId = null;
+		};
+		return function () {
+			if (!timeoutId) {
+				timeoutId = setInterval(blink, 1000);
+				window.onmousemove = clear;
+			}
+		};
+	};
 }
 $(document).ready(function() {
 	loungeChat.chat = new chatViewModel();
@@ -202,28 +225,3 @@ $(document).ready(function() {
 	ko.applyBindings(loungeChat.chat);
 });
 
-var flashTitle = (function () {
-  var oldTitle = document.title;
-  var msg = "New!";
-  var timeoutId;
-  var blink = function() { document.title = document.title == msg ? ' ' : msg; };
-  var clear = function() {
-    clearInterval(timeoutId);
-    document.title = oldTitle;
-    window.onmousemove = null;
-    timeoutId = null;
-  };
-  return function () {
-    if (!timeoutId) {
-      timeoutId = setInterval(blink, 1000);
-      window.onmousemove = clear;
-    }
-  };
-})();
-
-var audio_notif = (function () {
-	var audio = document.getElementById("audio_notif_sound");
-	audio.currentTime = 0; //Rewinding the audio snippet.
-	audio.play();
-
-})();
