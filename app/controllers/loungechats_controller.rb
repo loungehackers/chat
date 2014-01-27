@@ -69,7 +69,7 @@ class LoungechatsController < ApplicationController
 				tubesock.onclose do |closeCause|
 					closeCause = "unknown" if closeCause.nil?
 					if current_user.nil? or tubesock.closed?
-						puts "already closed"
+						puts "already closed #{closeCause}"
 					else
 						puts "#{current_user.name} exited with '#{closeCause}'"
 						Redis.new.srem("chatusers", current_user.name)

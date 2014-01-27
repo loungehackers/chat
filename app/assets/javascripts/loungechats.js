@@ -29,7 +29,6 @@ window.loungeChat = {};
 		lc = window.loungeChat;
 		lc.socket = new WebSocket("ws://" + window.location.host + "/chat");
 		lc.registerHandlers();
-		// lc.connectionTimer = window.setTimeout(lc.connect, 5000);
 	};
 	lc.commands = [];
 	lc.commands["login"] = function(argument) {
@@ -125,7 +124,20 @@ function chatViewModel() {
         return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;
 	};
 	self.close_chat = function() {
-		loungeChat.socket.close();
+		/*
+		* The readonly attribute readyState represents the state of 
+		* the connection. It can have the following values:
+		*
+		* 0 indicates that the connection has not yet been established.
+		* 1 indicates that the connection is established and communication is possible.
+		* 2 indicates that the connection is going through the closing handshake.
+		* 3 indicates that the connection has been closed or could not be opened.
+		*
+		* We only close in case of readystate == 1.
+		*/
+
+		if(loungeChat.socket.readyState == 1)
+			loungeChat.socket.close();
 	};
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
