@@ -185,6 +185,9 @@ function chatViewModel() {
 	self.audio_notif = function () {
 		var audio = document.getElementById("audio_notif_sound");
 		if(audio !== null) {
+			if(audio.currentTime !== 0) {
+				audio.currentTime = 0; //Rewinding the audio snippet.
+			}
 			audio.play();
 		}
 		// Fail silently, it's okay.
