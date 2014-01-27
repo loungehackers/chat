@@ -184,8 +184,11 @@ function chatViewModel() {
 	};
 	self.audio_notif = function () {
 		var audio = document.getElementById("audio_notif_sound");
-		audio.currentTime = 0; //Rewinding the audio snippet.
-		audio.play();
+		if(audio !== null) {
+			audio.currentTime = 0; //Rewinding the audio snippet.
+			audio.play();
+		}
+		// Fail silently, it's okay.
 	};
 	self.flashTitle = function () {
 		var oldTitle = document.title;
