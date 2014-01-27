@@ -135,7 +135,7 @@ function chatViewModel() {
 		*
 		* We only close in case of readystate == 1.
 		*/
-
+		console.error("close_chat called");
 		if(loungeChat.socket.readyState == 1)
 			loungeChat.socket.close();
 	};
@@ -245,7 +245,5 @@ $(document).ready(function() {
 			});
 		}
 	};
-
 	ko.applyBindings(loungeChat.chat);
 });
-

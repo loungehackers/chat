@@ -68,16 +68,17 @@ class LoungechatsController < ApplicationController
 				# Clean up after logout or timeout.
 				tubesock.onclose do |closeCause|
 					closeCause = "unknown" if closeCause.nil?
-					if current_user.nil? or tubesock.closed?
+					if current_user.nil? or tubesock.nil? or tubesock.closed?
 						puts "already closed #{closeCause}"
 					else
+						name = current_user.name
 						puts "#{current_user.name} exited with '#{closeCause}'"
-						Redis.new.srem("chatusers", current_user.name)
-						message = "[LH:logout]#{current_user.name}:#{Redis.new.smembers("chatusers").to_s}"
-						Redis.new.publish "chat", message
 						current_user = nil
 						session.destroy
 						client_thread.kill
+						Redis.new.srem("chatusers", name)
+						message = "[LH:logout]#{name}:#{Redis.new.smembers("chatusers").to_s}"
+						Redis.new.publish "chat", message
 					end
 				end
 			end
