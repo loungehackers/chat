@@ -11,17 +11,36 @@
 	</head>
 	<body>
 		<header class="topbar row">
-			<img src="http://img2.meetupstatic.com/906521611995523788/img/header/logo.png" height="30px">
-			<h1 style="line-height: 35px;">
-				LoungeChat
+			
+			<h1>
+				<img src="/assets/loungehackers-logo.png" height="50px"/>
 			</h1>
-			<% if current_user %>
-				<aside class="user_info">
-					Welcome <strong><%=  current_user.name %></strong>,
-					<%= link_to "Sign Out", signout_path %>
-				</aside>
-			<% end %>
 		</header>
+		<a href="https://github.com/StefanWallin/loungeChat/" target="_blank" data-bind="css: { hidden: !settingsDialogHidden() }"><img style="position: absolute; top: 0; right: 0; border: 0;" src="assets/pullrequests_welcome.png" alt="Pullrequests Welcome!"></a>
+		<% if current_user %>
+			<menu class="settings">
+				<span class="settings-handle" data-bind="click: toggleSettingsDialog, css: { active: !settingsDialogHidden()}">&#9881;</span>
+				<ul class="settings-content" data-bind="css: { hidden: settingsDialogHidden }">
+<!-- 					<li>
+						<label for="desktop_notif">
+							Desktop notifications: <input id="desktop_notif" class="setting" type="checkbox" data-bind="">
+						</label>
+					</li>
+ -->					<li>
+						<label for="flash_title_notif">
+							Title flashing notification: <input id="flash_title_notif" class="setting" type="checkbox" data-bind="checked: setting_flashTitle">
+						</label>
+					</li>
+					<li>
+						<label for="audio_notif">
+							Audio notifications: <input id="audio_notif" class="setting" type="checkbox" data-bind="checked: setting_audio_notif">
+						</label>
+						<audio src="/assets/click2.wav" preload="auto" id="audio_notif_sound"></audio>
+					</li>
+					<li><a href="<%=signout_path%>" data-bind="click: close_chat()">Sign Out</a></li>
+				</ul>
+			</menu>
+		<% end %>
 		<% unless current_user %>
 			<%= yield %>
 		<% else %>

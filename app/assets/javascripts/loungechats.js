@@ -114,15 +114,20 @@ function chatViewModel() {
 	self.currentMessage = ko.observable();
 	self.currentMessageHasFocus = ko.observable(true);
 	self.isOnline = ko.observable(false);
+	self.settingsDialogHidden = ko.observable(true);
+	self.setting_flashTitle = ko.observable(true, {persist: 'setting_flashTitle'});
+	self.setting_audio_notif = ko.observable(true, {persist: 'setting_audio_notif'});
 	self.sortedUsers = ko.dependentObservable(function() {
 		return this.users.slice().sort(this.sortUsersFunction);
 	}, self);
 
 
 	self.sortUsersFunction = function(a, b) {
-        return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;  
+        return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;
 	};
-
+	self.close_chat = function() {
+		loungeChat.socket.close();
+	};
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
 		self.currentMessage("");
@@ -131,9 +136,10 @@ function chatViewModel() {
 	self.addMessage = function(sender, message, type) {
 		var date = new Date();
 		var timestamp = "[" + date.toLocaleTimeString() + "] ";
-		message = timestamp + message
+		message = timestamp + message;
 		self.messages.push(new messageViewModel(sender, message, type));
-		newExcitingAlerts();			
+		if(self.setting_flashTitle()) self.flashTitle();
+		if(self.setting_audio_notif()) self.audio_notif();
 	};
 	self.getUserByName = function(username) {
 		return ko.utils.arrayFirst(self.users(), function (user) {
@@ -169,10 +175,51 @@ function chatViewModel() {
 	};
 	self.scrollBottom = function(element, index, data) {
 		if (element.nodeType === 1) {
-			element = element.parentNode;			
+			element = element.parentNode;
 			element.scrollTop = element.scrollHeight;
 		}
 	};
+	self.toggleSettingsDialog = function () {
+		self.settingsDialogHidden(!self.settingsDialogHidden());
+	};
+	self.audio_notif = function () {
+		if(self.audioplaying !== true && self.audio !== undefined) {
+			self.audioplaying = true;
+			console.info("start playing");
+			self.audio.play();
+		}
+	};
+	self.flashTitle = function () {
+		var oldTitle = document.title;
+		var msg = "New!";
+		var timeoutId;
+		var blink = function() { document.title = document.title == msg ? ' ' : msg; };
+		var clear = function() {
+			clearInterval(timeoutId);
+			document.title = oldTitle;
+			window.onmousemove = null;
+			timeoutId = null;
+		};
+		return function () {
+			if (!timeoutId) {
+				timeoutId = setInterval(blink, 1000);
+				window.onmousemove = clear;
+			}
+		};
+	};
+	self.initAudio = function() {
+		if(self.audio === undefined || self.audio === null) {
+			self.audio = document.getElementById("audio_notif_sound");
+			self.audioplaying = false;
+
+			self.audio.addEventListener('ended', function() {
+				console.info("stopped playing");
+				self.audioplaying = false;
+				self.audio.load();
+			});
+		}
+	};
+	self.initAudio();
 }
 $(document).ready(function() {
 	loungeChat.chat = new chatViewModel();
@@ -193,21 +240,3 @@ $(document).ready(function() {
 	ko.applyBindings(loungeChat.chat);
 });
 
-newExcitingAlerts = (function () {
-  var oldTitle = document.title;
-  var msg = "New!";
-  var timeoutId;
-  var blink = function() { document.title = document.title == msg ? ' ' : msg; };
-  var clear = function() {
-    clearInterval(timeoutId);
-    document.title = oldTitle;
-    window.onmousemove = null;
-    timeoutId = null;
-  };
-  return function () {
-    if (!timeoutId) {
-      timeoutId = setInterval(blink, 1000);
-      window.onmousemove = clear;
-    }
-  };
-}());

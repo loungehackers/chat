@@ -17,7 +17,7 @@ class LoungechatsController < ApplicationController
 
 	end
 
-	include Tubesock::Hijack
+	include Tubesock::Hijack    
 
 	def chat
 		hijack do |tubesock|
@@ -37,25 +37,25 @@ class LoungechatsController < ApplicationController
 				client_thread.kill
 			else
 				puts current_user.name + " has joined";
-				# Loading history		
+				# Loading history
 				for i in 0..@@num_history_lines
 					message = Redis.new.lindex("history", @@num_history_lines-i)
 					
 					# Sending over socket instead of publishing, otherwise
 					# everyone would get history when a new user joins.
-					tubesock.send_data "[LH:history]" + message if message 
+					tubesock.send_data "[LH:history]#{message}" if message
 				end
 
 				# Adding username to list of users & publishing join.
 				Redis.new.sadd("chatusers", current_user.name)
-				message = "[LH:login]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
+				message = "[LH:login]#{current_user.name}:#{Redis.new.smembers("chatusers").to_s}"
 				Redis.new.publish "chat", message
 
 				# Registering this socket to listen on messages from the client.
 				tubesock.onmessage do |messageFromClient|
 					#Sanitizing the message
 					messageFromClient.force_encoding(Encoding::UTF_8)
-					message = CGI::escapeHTML(current_user.name + ": " + messageFromClient)
+					message = CGI::escapeHTML("#{current_user.name}: #{messageFromClient}")
 
 					# Publishing the message to the chat room
 					Redis.new.publish "chat", message
@@ -66,13 +66,19 @@ class LoungechatsController < ApplicationController
 				end
 
 				# Clean up after logout or timeout.
-				tubesock.onclose do
-					Redis.new.srem("chatusers", current_user.name)
-					message = "[LH:logout]" + current_user.name + ":" + Redis.new.smembers("chatusers").to_s
-					Redis.new.publish "chat", message
-					session.destroy
-					client_thread.kill
-
+				tubesock.onclose do |closeCause|
+					closeCause = "unknown" if closeCause.nil?
+					if current_user.nil? or tubesock.closed?
+						puts "already closed"
+					else
+						puts "#{current_user.name} exited with '#{closeCause}'"
+						Redis.new.srem("chatusers", current_user.name)
+						message = "[LH:logout]#{current_user.name}:#{Redis.new.smembers("chatusers").to_s}"
+						Redis.new.publish "chat", message
+						current_user = nil
+						session.destroy
+						client_thread.kill
+					end
 				end
 			end
 		end

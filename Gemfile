@@ -49,7 +49,7 @@ end
 # Use puma as the app server
 gem 'redis'
 gem 'puma'
-gem 'tubesock', :git => 'git@github.com:StefanWallin/tubesock.git'
+gem 'tubesock', :git => 'git@github.com:StefanWallin/tubesock.git', :branch => 'exception_handling'
 gem 'pry'
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
