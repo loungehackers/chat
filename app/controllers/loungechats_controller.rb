@@ -17,7 +17,7 @@ class LoungechatsController < ApplicationController
 
 	end
 
-	include Tubesock::Hijack
+	include Tubesock::Hijack    
 
 	def chat
 		hijack do |tubesock|
@@ -37,7 +37,7 @@ class LoungechatsController < ApplicationController
 				client_thread.kill
 			else
 				puts current_user.name + " has joined";
-				# Loading history		
+				# Loading history
 				for i in 0..@@num_history_lines
 					message = Redis.new.lindex("history", @@num_history_lines-i)
 					
@@ -67,13 +67,13 @@ class LoungechatsController < ApplicationController
 
 				# Clean up after logout or timeout.
 				tubesock.onclose do |closeCause|
-					puts "#{closeCause} for #{current_user.name}"
+					puts "#{current_user.name} exited with '#{closeCause}'"
 					Redis.new.srem("chatusers", current_user.name)
 					message = "[LH:logout]#{current_user.name}:#{Redis.new.smembers("chatusers").to_s}"
 					Redis.new.publish "chat", message
 					session.destroy
 					client_thread.kill
-
+					
 				end
 			end
 		end

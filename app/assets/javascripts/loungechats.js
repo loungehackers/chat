@@ -125,7 +125,9 @@ function chatViewModel() {
 	self.sortUsersFunction = function(a, b) {
         return a.name().toLowerCase() > b.name().toLowerCase() ? 1 : -1;
 	};
-
+	self.close_chat = function() {
+		loungeChat.socket.close()
+	}
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
 		self.currentMessage("");
