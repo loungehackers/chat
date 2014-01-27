@@ -219,7 +219,7 @@ function chatViewModel() {
 			});
 		}
 	};
-	initAudio();
+	self.initAudio();
 }
 $(document).ready(function() {
 	loungeChat.chat = new chatViewModel();
