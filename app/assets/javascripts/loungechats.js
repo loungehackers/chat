@@ -183,14 +183,22 @@ function chatViewModel() {
 		self.settingsDialogHidden(!self.settingsDialogHidden());
 	};
 	self.audio_notif = function () {
-		var audio = document.getElementById("audio_notif_sound");
-		if(audio !== null) {
-			if(audio.currentTime !== 0) {
-				audio.currentTime = 0; //Rewinding the audio snippet.
-			}
-			audio.play();
+		if(self.audio === undefined || self.audio === null) {
+			self.audio = document.getElementById("audio_notif_sound");
+			self.audio.load();
 		}
-		// Fail silently, it's okay.
+
+		self.audio.addEventListener('ended', function() {
+			self.audioplaying = false;
+			console.info("stopped playing");
+		});
+
+		if(self.audioplaying !== true) {
+			self.audio.load();
+			self.audioplaying = true;
+			console.info("start playing");
+			self.audio.play();
+		}
 	};
 	self.flashTitle = function () {
 		var oldTitle = document.title;
