@@ -19,7 +19,7 @@
 		<% if current_user %>
 			<menu class="settings">
 				<span class="settings-handle" data-bind="click: toggleSettingsDialog, css: { active: !settingsDialogHidden()}">&#9881;</span>
-				<ul class="settings-content" data-bind="css: { hidden: settingsDialogHidden }">
+				<ul class="settings-content hidden" data-bind="css: { hidden: settingsDialogHidden }">
 <!-- 					<li>
 						<label for="desktop_notif">
 							Desktop notifications: <input id="desktop_notif" class="setting" type="checkbox" data-bind="">
