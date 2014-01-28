@@ -53,16 +53,20 @@ class LoungechatsController < ApplicationController
 
 				# Registering this socket to listen on messages from the client.
 				tubesock.onmessage do |messageFromClient|
-					#Sanitizing the message
-					messageFromClient.force_encoding(Encoding::UTF_8)
-					message = CGI::escapeHTML("#{current_user.name}: #{messageFromClient}")
+					if current_user.nil?
+						puts "user didn't notice it had timed out"
+					else
+						#Sanitizing the message
+						messageFromClient.force_encoding(Encoding::UTF_8)
+						message = CGI::escapeHTML("#{current_user.name}: #{messageFromClient}")
 
-					# Publishing the message to the chat room
-					Redis.new.publish "chat", message
+						# Publishing the message to the chat room
+						Redis.new.publish "chat", message
 
-					# Saving message in the history
-					Redis.new.lpush("history", message)
-					Redis.new.ltrim("history", 0, @@num_history_lines)
+						# Saving message in the history
+						Redis.new.lpush("history", message)
+						Redis.new.ltrim("history", 0, @@num_history_lines)
+					end
 				end
 
 				# Clean up after logout or timeout.
