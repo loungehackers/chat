@@ -148,8 +148,10 @@ function chatViewModel() {
 		var timestamp = "[" + date.toLocaleTimeString() + "] ";
 		message = timestamp + message;
 		self.messages.push(new messageViewModel(sender, message, type));
-		if(self.setting_flashTitle()) self.flashTitle();
-		if(self.setting_audio_notif()) self.audio_notif();
+		if(type == "message") {
+			if(self.setting_flashTitle()) self.flashTitle();
+			if(self.setting_audio_notif()) self.audio_notif();
+		}
 	};
 	self.getUserByName = function(username) {
 		return ko.utils.arrayFirst(self.users(), function (user) {
@@ -209,12 +211,10 @@ function chatViewModel() {
 			window.onmousemove = null;
 			timeoutId = null;
 		};
-		return function () {
-			if (!timeoutId) {
-				timeoutId = setInterval(blink, 1000);
-				window.onmousemove = clear;
-			}
-		};
+		if (!timeoutId) {
+			timeoutId = setInterval(blink, 1000);
+			window.onmousemove = clear;
+		}
 	};
 	self.initAudio = function() {
 		if(self.audio === undefined || self.audio === null) {
