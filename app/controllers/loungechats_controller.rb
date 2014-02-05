@@ -1,6 +1,7 @@
 require "cgi"
 class LoungechatsController < ApplicationController
 	@@num_history_lines = 50
+	@@debug = true
 	# GET /loungechats
 	def index
 		redirect_to login_path unless current_user
@@ -36,7 +37,7 @@ class LoungechatsController < ApplicationController
 				session.destroy
 				client_thread.kill
 			else
-				puts current_user.name + " has joined";
+				puts current_user.name + " has joined" if @@debug
 				# Loading history
 				for i in 0..@@num_history_lines
 					message = Redis.new.lindex("history", @@num_history_lines-i)
@@ -54,7 +55,7 @@ class LoungechatsController < ApplicationController
 				# Registering this socket to listen on messages from the client.
 				tubesock.onmessage do |messageFromClient|
 					if current_user.nil?
-						puts "user didn't notice it had timed out"
+						puts "user didn't notice it had timed out" if @@debug
 					else
 						#Sanitizing the message
 						messageFromClient.force_encoding(Encoding::UTF_8)
@@ -73,10 +74,10 @@ class LoungechatsController < ApplicationController
 				tubesock.onclose do |closeCause|
 					closeCause = "unknown" if closeCause.nil?
 					if current_user.nil? or tubesock.nil? or tubesock.closed?
-						puts "already closed #{closeCause}"
+						puts "already closed #{closeCause}" if @@debug
 					else
 						name = current_user.name
-						puts "#{current_user.name} exited with '#{closeCause}'"
+						puts "#{current_user.name} exited with '#{closeCause}'" if @@debug
 						current_user = nil
 						session.destroy
 						client_thread.kill
