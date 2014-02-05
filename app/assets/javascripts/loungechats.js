@@ -27,7 +27,15 @@ window.loungeChat = {};
 	};
 	lc.connect = function() {
 		lc = window.loungeChat;
-		lc.socket = new WebSocket("ws://" + window.location.host + "/chat");
+		var loc = window.location, ws_uri;
+		if (loc.protocol === "https:") {
+			ws_uri = "wss://";
+		} else {
+			ws_uri = "ws://";
+		}
+		ws_uri += loc.host + "/chat";
+
+		lc.socket = new WebSocket(ws_uri);
 		lc.registerHandlers();
 	};
 	lc.commands = [];
