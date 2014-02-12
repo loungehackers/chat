@@ -211,18 +211,18 @@ function chatViewModel() {
 	self.flashTitle = function () {
 		var oldTitle = document.title;
 		var msg = "New!";
-		var timeoutId;
 		var blink = function() { document.title = document.title == msg ? ' ' : msg; };
+		if(document.timeoutId === null || document.timeoutId === undefined)
+			document.timeoutId = setInterval(blink, 1000);
+
 		var clear = function() {
-			clearInterval(timeoutId);
+			clearInterval(document.timeoutId);
 			document.title = oldTitle;
 			window.onmousemove = null;
-			timeoutId = null;
+			window.onkeydown = null;
+			document.timeoutId = null;
 		};
-		if (!timeoutId) {
-			timeoutId = setInterval(blink, 1000);
-			window.onmousemove = clear;
-		}
+		window.onfocus = clear;
 	};
 	self.initAudio = function() {
 		if(self.audio === undefined || self.audio === null) {
@@ -243,7 +243,10 @@ $(document).ready(function() {
 	ko.bindingHandlers.returnKey = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
 			ko.utils.registerEventHandler(element, 'keydown', function(evt) {
-				if (evt.keyCode === 13 && !evt.shiftKey && $(evt.target).val().length !== 0) {
+				var ENTERKEY = 13;
+				var TABKEY = 9;
+				if (evt.keyCode === ENTERKEY && !evt.shiftKey && $(evt.target).val().length !== 0) {
+					// 
 					evt.preventDefault();
 					evt.target.blur();
 					valueAccessor().call(viewModel, bindingContext.$data);

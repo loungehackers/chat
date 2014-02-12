@@ -1,7 +1,7 @@
 require "cgi"
 class LoungechatsController < ApplicationController
 	@@num_history_lines = 50
-	@@debug = true
+	@@debug = config.debug
 	# GET /loungechats
 	def index
 		redirect_to login_path unless current_user
