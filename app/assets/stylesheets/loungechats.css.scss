@@ -50,7 +50,7 @@
 		font-size: 9px;
 	}
 }
-@media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 1),(min--moz-device-pixel-ratio: 1),(min-resolution: 1dppx) {
+@media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 2),(min--moz-device-pixel-ratio: 2),(min-resolution: 2dppx) {
 	.output {
 		font-size: 7px;
 	}
