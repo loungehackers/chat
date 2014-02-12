@@ -37,7 +37,25 @@
 
 .output {
 	white-space: pre-wrap;
+	font-size: 13px;
+	line-height: 1.4em;
 }
+@media (max-width: 600px), (max-height: 600px) {
+	.output {
+		font-size: 11px;
+	}
+}
+@media (max-width: 400px), (max-height: 400px) {
+	.output {
+		font-size: 9px;
+	}
+}
+@media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 1),(min--moz-device-pixel-ratio: 1),(min-resolution: 1dppx) {
+	.output {
+		font-size: 7px;
+	}
+}
+
 
 .output_message {
 

@@ -90,6 +90,22 @@ body { margin: 0 }
 .userlist.col { width: 200px; right: 0; }
 .messagebox.row { height: 75px; bottom: 0; }
 
+@media (max-width: 800px) {
+	.content.col { right: 0; width: 100%;}
+	.userlist.col { display: none;}
+}
+@media (max-height: 600px) {
+	.body.row { bottom: 1.6em; }
+	.messagebox.row { height: 1.6em;}
+}
+@media (max-height: 300px) {
+	.topbar.row{display: none;}
+	.body.row { top: 0; height: 50%; }
+	.messagebox.row { height: 50%; }
+}
+
+
+
 /* Fix scrolling */
 .scroll-x { overflow-x: auto; }
 .scroll-y { overflow-y: auto; }
@@ -174,6 +190,10 @@ body { margin: 0 }
 	right: 0;
 	border: 0;
 	z-index: 1;
+}
+
+@media (max-width: 800px) {
+	.pr { display: none;}
 }
 
 /*#######################################################################################################*/
