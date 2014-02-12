@@ -218,11 +218,12 @@ function chatViewModel() {
 		var clear = function() {
 			clearInterval(document.timeoutId);
 			document.title = oldTitle;
+			window.onfocus = null;
 			window.onmousemove = null;
-			window.onkeydown = null;
 			document.timeoutId = null;
 		};
 		window.onfocus = clear;
+		window.onmousemove = clear;
 	};
 	self.initAudio = function() {
 		if(self.audio === undefined || self.audio === null) {
