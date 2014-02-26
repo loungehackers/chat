@@ -185,7 +185,7 @@ function chatViewModel() {
 		var length = wordEnd - wordStart;
 		var oldLength = self.lastMatchingUsername().length - self.lastMatchingWord().length;
 		var m = message.currentMessage();
-		message.currentMessage(m.substring(0, wordStart+length) + m.substring(wordStart+oldLength+1));
+		message.currentMessage(m.substring(0, wordStart+length) + m.substring(wordEnd+oldLength));
 		if(matchingWord != self.lastMatchingWord()) {
 			// First match or new match
 			if(self.lastMatchingWord() !== "") {
@@ -196,7 +196,7 @@ function chatViewModel() {
 			self.lastSuggestedIndex(0);
 		}
 		console.dir(matchingUsernames);
-		message.currentMessage(message.currentMessage().insert(wordStart+1, matchingUsernames[self.lastSuggestedIndex()].substring(length)));
+		message.currentMessage(message.currentMessage().insert(wordEnd, matchingUsernames[self.lastSuggestedIndex()].substring(length)));
 		self.lastMatchingUsername(matchingUsernames[self.lastSuggestedIndex()]);
 		self.lastMatchingWord(matchingWord);
 		if(self.lastSuggestedIndex() == (matchingUsernames.length - 1)) {
