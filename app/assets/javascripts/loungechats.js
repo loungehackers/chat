@@ -165,7 +165,6 @@ function chatViewModel() {
 		var users = self.users();
 		for (var i = users.length - 1; i >= 0; i--) {
 			if(pattern.test(users[i].name().toLowerCase())){
-				console.log("match! ", users[i].name());
 				names.push(users[i].name());
 			}
 		}
@@ -180,12 +179,13 @@ function chatViewModel() {
 	*/
 	self.tabCompletion = function(message, wordStart, wordEnd) {
 		var matchingWord = message.currentMessage().substring(wordStart, wordEnd).toLowerCase();
-		console.log(":" + matchingWord + ":");
 		var matchingUsernames = self.getMatchingUsernames(matchingWord);
 		var length = wordEnd - wordStart;
 		var oldLength = self.lastMatchingUsername().length - self.lastMatchingWord().length;
 		var m = message.currentMessage();
-		message.currentMessage(m.substring(0, wordStart+length) + m.substring(wordEnd+oldLength));
+		if(self.lastMatchingUsername() !== "") {
+			message.currentMessage(m.substring(0, wordStart+length) + m.substring(wordEnd+oldLength));
+		}
 		if(matchingWord != self.lastMatchingWord()) {
 			// First match or new match
 			if(self.lastMatchingWord() !== "") {
@@ -195,17 +195,18 @@ function chatViewModel() {
 			self.lastMatchingUsername("");
 			self.lastSuggestedIndex(0);
 		}
-		console.dir(matchingUsernames);
-		message.currentMessage(message.currentMessage().insert(wordEnd, matchingUsernames[self.lastSuggestedIndex()].substring(length)));
-		self.lastMatchingUsername(matchingUsernames[self.lastSuggestedIndex()]);
+		if(matchingUsernames.length > 0) {
+			message.currentMessage(message.currentMessage().insert(wordEnd, matchingUsernames[self.lastSuggestedIndex()].substring(length)));
+			self.lastMatchingUsername(matchingUsernames[self.lastSuggestedIndex()]);
+		} else {
+			self.lastMatchingUsername("");
+		}
 		self.lastMatchingWord(matchingWord);
 		if(self.lastSuggestedIndex() == (matchingUsernames.length - 1)) {
 			self.lastSuggestedIndex(0);
 		} else {
 			self.lastSuggestedIndex(self.lastSuggestedIndex()+1);
 		}
-
-		self.lastMatchingWord(matchingWord);
 	};
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
@@ -323,8 +324,12 @@ $(document).ready(function() {
 				if(evt.keyCode === TABKEY && !evt.shiftKey && $(evt.target).val().length !== 0) {
 					// Try to tab-complete the username.
 					//  sadklkjlads ljkadslk jads kS S
+					
 					var wordEnd = evt.target.selectionStart;
 					var wordStart = $(this).val().lastIndexOf(" ", wordEnd-1) + 1;
+					if(wordStart < 0 ) {
+						return;
+					}
 					evt.preventDefault();
 					evt.target.blur();
 					valueAccessor().call(viewModel, bindingContext.$data, wordStart, wordEnd);
