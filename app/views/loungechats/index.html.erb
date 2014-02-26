@@ -14,7 +14,7 @@
 	
 	<footer class="messagebox row"> 
 		<form class="chat" data-bind="submit: postMessage">
-			<textarea autofocus="autofocus" data-bind="enable: isOnline, value: currentMessage, returnKey: postMessage" placeholder="Write your message, and press [Enter] to send or [Shift]+[Enter] for newline."></textarea>
+			<textarea autofocus="autofocus" data-bind="enable: isOnline, value: currentMessage, returnKey: postMessage, tabKey: tabCompletion" placeholder="Write your message, and press [Enter] to send or [Shift]+[Enter] for newline."></textarea>
 		</form>
 	</footer>
 <% end %>

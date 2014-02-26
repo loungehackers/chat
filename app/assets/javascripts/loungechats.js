@@ -1,5 +1,12 @@
 window.loungeChat = {};
 
+String.prototype.insert = function (index, string) {
+  if (index > 0)
+    return this.substring(0, index) + string + this.substring(index, this.length);
+  else
+    return string + this;
+};
+
 (function() {
 	lc = window.loungeChat;
 	lc.connectionTimer = "test";
@@ -126,6 +133,11 @@ function chatViewModel() {
 	self.sortedUsers = ko.dependentObservable(function() {
 		return this.users.slice().sort(this.sortUsersFunction);
 	}, self);
+	self.matchingUserNames = ko.observableArray();
+	self.lastMatchingWord = ko.observable("");
+	self.lastMatchingUsername = ko.observable("");
+	self.lastSuggestedIndex = ko.observable(0);
+
 
 
 	self.sortUsersFunction = function(a, b) {
@@ -145,6 +157,55 @@ function chatViewModel() {
 		*/
 		if(loungeChat.socket.readyState == 1)
 			loungeChat.socket.close();
+	};
+
+	self.getMatchingUsernames = function(matchingWord) {
+		var names = [];
+		var pattern = new RegExp("^"+matchingWord);
+		var users = self.users();
+		for (var i = users.length - 1; i >= 0; i--) {
+			if(pattern.test(users[i].name().toLowerCase())){
+				console.log("match! ", users[i].name());
+				names.push(users[i].name());
+			}
+		}
+		return names;
+	};
+
+	/**
+	* A function that works with tab completion for user names
+	* @param  Integer	wordStart	where the closest word starts(separated by space)
+	* @param  Integer	wordEnd		current position of the caret(we pretend the word end here)
+	* @return void
+	*/
+	self.tabCompletion = function(message, wordStart, wordEnd) {
+		var matchingWord = message.currentMessage().substring(wordStart, wordEnd).toLowerCase();
+		console.log(":" + matchingWord + ":");
+		var matchingUsernames = self.getMatchingUsernames(matchingWord);
+		var length = wordEnd - wordStart;
+		var oldLength = self.lastMatchingUsername().length - self.lastMatchingWord().length;
+		var m = message.currentMessage();
+		message.currentMessage(m.substring(0, wordStart+length) + m.substring(wordStart+oldLength+1));
+		if(matchingWord != self.lastMatchingWord()) {
+			// First match or new match
+			if(self.lastMatchingWord() !== "") {
+				matchingUsernames = [];
+			}
+			self.lastMatchingWord("");
+			self.lastMatchingUsername("");
+			self.lastSuggestedIndex(0);
+		}
+		console.dir(matchingUsernames);
+		message.currentMessage(message.currentMessage().insert(wordStart+1, matchingUsernames[self.lastSuggestedIndex()].substring(length)));
+		self.lastMatchingUsername(matchingUsernames[self.lastSuggestedIndex()]);
+		self.lastMatchingWord(matchingWord);
+		if(self.lastSuggestedIndex() == (matchingUsernames.length - 1)) {
+			self.lastSuggestedIndex(0);
+		} else {
+			self.lastSuggestedIndex(self.lastSuggestedIndex()+1);
+		}
+
+		self.lastMatchingWord(matchingWord);
 	};
 	self.postMessage = function(message) {
 		loungeChat.postMessage(self.currentMessage());
@@ -245,12 +306,28 @@ $(document).ready(function() {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
 			ko.utils.registerEventHandler(element, 'keydown', function(evt) {
 				var ENTERKEY = 13;
-				var TABKEY = 9;
 				if (evt.keyCode === ENTERKEY && !evt.shiftKey && $(evt.target).val().length !== 0) {
 					// 
 					evt.preventDefault();
 					evt.target.blur();
 					valueAccessor().call(viewModel, bindingContext.$data);
+					evt.target.focus();
+				}
+			});
+		}
+	};
+	ko.bindingHandlers.tabKey = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			ko.utils.registerEventHandler(element, 'keydown', function(evt) {
+				var TABKEY = 9;
+				if(evt.keyCode === TABKEY && !evt.shiftKey && $(evt.target).val().length !== 0) {
+					// Try to tab-complete the username.
+					//  sadklkjlads ljkadslk jads kS S
+					var wordEnd = evt.target.selectionStart;
+					var wordStart = $(this).val().lastIndexOf(" ", wordEnd-1) + 1;
+					evt.preventDefault();
+					evt.target.blur();
+					valueAccessor().call(viewModel, bindingContext.$data, wordStart, wordEnd);
 					evt.target.focus();
 				}
 			});
