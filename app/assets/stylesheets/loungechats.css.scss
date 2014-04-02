@@ -52,7 +52,7 @@
 }
 @media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 2),(min--moz-device-pixel-ratio: 2),(min-resolution: 2dppx) {
 	.output {
-		font-size: 7px;
+		font-size: .8em;
 	}
 }
 
@@ -61,7 +61,7 @@
 
 }
 .output_history {
-	color: rgba(255, 255, 255, 0.28);
+	color: rgba(255, 255, 255, 0.8);
 }
 .output_logout {
 	color: rgb(129,164,0);
