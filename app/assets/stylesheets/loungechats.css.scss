@@ -3,7 +3,8 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .container_12 {
-	font-family: monospace;
+	font-family: 'Andale Mono W02 Regular', Inconsolata, 'Menlo Sans', Consolas, 'Courier New', 'Courier', monospaced;
+	text-rendering: optimizeLegibility;
 }
 .userlist.col { 
 	border-left: 1px solid white;
@@ -24,13 +25,13 @@
 		width: 100%;
 
 		&::-webkit-input-placeholder {  /* chrome, safari et.c. */
-			color: rgba(255, 255, 255, 0.18);
+			color: rgba(255, 255, 255, 0.38);
 		}
 		&::-moz-placeholder { /* firefox 19+ */
-			color: rgba(255, 255, 255, 0.18);
+			color: rgba(255, 255, 255, 0.38);
 		}
 		&:-ms-input-placeholder {  /* ie */
-			color: rgba(255, 255, 255, 0.18);
+			color: rgba(255, 255, 255, 0.38);
 		}
 	}
 }
@@ -52,7 +53,7 @@
 }
 @media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 2),(min--moz-device-pixel-ratio: 2),(min-resolution: 2dppx) {
 	.output {
-		font-size: 7px;
+		font-size: 0.8em;
 	}
 }
 
