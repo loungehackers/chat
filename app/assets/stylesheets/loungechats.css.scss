@@ -43,12 +43,13 @@
 }
 @media (max-width: 600px), (max-height: 600px) {
 	.output {
-		font-size: 11px;
+		font-size: 14px;
+		letter-spacing: -1px;
 	}
 }
 @media (max-width: 400px), (max-height: 400px) {
 	.output {
-		font-size: 9px;
+		font-size: 10px;
 	}
 }
 @media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 2),(min--moz-device-pixel-ratio: 2),(min-resolution: 2dppx) {
