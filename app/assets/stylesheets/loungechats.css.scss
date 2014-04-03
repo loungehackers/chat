@@ -25,13 +25,13 @@
 		width: 100%;
 
 		&::-webkit-input-placeholder {  /* chrome, safari et.c. */
-			color: rgba(255, 255, 255, 0.38);
+			color: #A1BEC0;
 		}
 		&::-moz-placeholder { /* firefox 19+ */
-			color: rgba(255, 255, 255, 0.38);
+			color: #A1BEC0;
 		}
 		&:-ms-input-placeholder {  /* ie */
-			color: rgba(255, 255, 255, 0.38);
+			color: #A1BEC0;
 		}
 	}
 }
@@ -62,14 +62,17 @@
 
 }
 .output_history {
-	color: rgba(255, 255, 255, 0.28);
+	color: #A1BEC0;
 }
 .output_logout {
 	color: rgb(129,164,0);
+	color: #E1FF71;
 }
 .output_login {
 	color: rgb(240,78,148);
+	color: #F19FC2;
 }
 .output_highlight {
 	color: rgb(47,153,220);
+	color: #83D0FF;
 }
