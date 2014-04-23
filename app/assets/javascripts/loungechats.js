@@ -1,3 +1,5 @@
+if (false) {
+
 window.loungeChat = {};
 
 String.prototype.insert = function (index, string) {
@@ -340,3 +342,4 @@ $(document).ready(function() {
 	};
 	ko.applyBindings(loungeChat.chat);
 });
+}

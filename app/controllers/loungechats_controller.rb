@@ -13,6 +13,11 @@ class LoungechatsController < ApplicationController
 
 	end
 
+	# GET /lab
+	def lab
+		puts response.headers
+	end
+
 	# GET /login
 	def login
 
@@ -44,28 +49,40 @@ class LoungechatsController < ApplicationController
 					
 					# Sending over socket instead of publishing, otherwise
 					# everyone would get history when a new user joins.
-					tubesock.send_data "[LH:history]#{message}" if message
+					tubesock.send_data message if message
 				end
 
 				# Adding username to list of users & publishing join.
 				Redis.new.sadd("chatusers", current_user.name)
-				message = "[LH:login]#{current_user.name}:#{Redis.new.smembers("chatusers").to_s}"
-				Redis.new.publish "chat", message
+				members = Redis.new.smembers("chatusers").to_a
+				message = {
+					:type => "login",
+					:my_uid => current_user.uid,
+					:members => members		
+				}				
+				Redis.new.publish "chat", message.to_json
 
 				# Registering this socket to listen on messages from the client.
 				tubesock.onmessage do |messageFromClient|
+
 					if current_user.nil?
 						puts "user didn't notice it had timed out" if @@debug
 					else
 						#Sanitizing the message
 						messageFromClient.force_encoding(Encoding::UTF_8)
-						message = CGI::escapeHTML("#{current_user.name}: #{messageFromClient}")
 
+						message = {
+							:type => "message",
+							:content => CGI::escapeHTML(messageFromClient),
+							:user_id => current_user.uid,
+							:timestamp => Time.now.to_i,
+							:room => 0
+						}
 						# Publishing the message to the chat room
-						Redis.new.publish "chat", message
-
+						Redis.new.publish "chat", message.to_json
+						message[:type] = "history"
 						# Saving message in the history
-						Redis.new.lpush("history", message)
+						Redis.new.lpush("history", message.to_json)
 						Redis.new.ltrim("history", 0, @@num_history_lines)
 					end
 				end

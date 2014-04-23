@@ -166,6 +166,7 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 1.2)
   jquery-rails
+  json
   omniauth-meetup
   pg
   pry

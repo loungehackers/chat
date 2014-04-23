@@ -4,6 +4,7 @@ LoungeChat2::Application.routes.draw do
   get "/login" => "loungechats#login"
   get "/assets/libs/jquery.min.map", to: proc { [404, {}, ['']] }
   get '/chat' => 'loungechats#chat'
+  get '/lab' => 'loungechats#lab'
 
   # You can have the root of your site routed with "root"
   root 'loungechats#index'

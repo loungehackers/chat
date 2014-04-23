@@ -1,6 +1,6 @@
 # encoding: utf-8
 <!DOCTYPE html>
-<html>
+<html data-ng-app="LoungeChat" data-ng-csp>
 	<head>
 		<title>LoungeChat</title>
 		<meta charset="utf-8" />
@@ -15,17 +15,14 @@
 				<img src="/assets/loungehackers-logo.png" height="50px"/>
 			</h1>
 		</header>
-		<a href="https://github.com/StefanWallin/loungeChat/" target="_blank" data-bind="css: { hidden: !settingsDialogHidden() }"><img class="pr" src="assets/pullrequests_welcome.png" alt="Pullrequests Welcome!"></a>
+		<a href="https://github.com/StefanWallin/loungeChat/" target="_blank" data-bind="css: { hidden: !settingsDialogHidden() }">
+			<img class="pr" src="assets/pullrequests_welcome.png" alt="Pullrequests Welcome!">
+		</a>
 		<% if current_user %>
 			<menu class="settings">
 				<span class="settings-handle" data-bind="click: toggleSettingsDialog, css: { active: !settingsDialogHidden()}">&#9881;</span>
 				<ul class="settings-content hidden" data-bind="css: { hidden: settingsDialogHidden }">
-<!-- 					<li>
-						<label for="desktop_notif">
-							Desktop notifications: <input id="desktop_notif" class="setting" type="checkbox" data-bind="">
-						</label>
-					</li>
- -->					<li>
+					<li>
 						<label for="flash_title_notif">
 							Title flashing notification: <input id="flash_title_notif" class="setting" type="checkbox" data-bind="checked: setting_flashTitle">
 						</label>
@@ -40,13 +37,7 @@
 				</ul>
 			</menu>
 		<% end %>
-		<% unless current_user %>
-			<%= yield %>
-		<% else %>
-			<div class="container_12">
-				<%= yield %>
-			</div>
-		<% end %>
+		<%= yield %>
 		<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
 	</body>
 </html>

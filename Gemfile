@@ -4,6 +4,8 @@ ruby '2.0.0'
 gem 'omniauth-meetup'
 gem 'rMeetup'
 gem 'dotenv-rails'
+gem 'json'
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
