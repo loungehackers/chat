@@ -3,6 +3,7 @@ require 'digest/sha1'
 class LoungechatsController < ApplicationController
 	@@num_history_lines = 50
 	@@debug = true
+	@@redis
 	# GET /loungechats
 	def index
 		redirect_to login_path unless current_user
@@ -30,6 +31,7 @@ class LoungechatsController < ApplicationController
 		hijack do |tubesock|
 			my_socket_string = current_user.uid.to_s + Time.now.to_i.to_s
 			my_socket_hash = Digest::SHA1.hexdigest(my_socket_string)
+			@@redis = Redis.new
 
 			# Set up so we can send messages to this chat client.
 			client_thread = Thread.new do
@@ -81,7 +83,7 @@ class LoungechatsController < ApplicationController
 		def publish_history(tubesock)
 			if tubesock
 				for i in 0..@@num_history_lines
-					message = Redis.new.lindex("history", @@num_history_lines-i)
+					message = @@redis.lindex("history", @@num_history_lines-i)
 
 					# Sending over socket instead of publishing, otherwise
 					# everyone would get history when a new user joins.
@@ -95,18 +97,18 @@ class LoungechatsController < ApplicationController
 
 		def publish_join()
 			# TODO: Change so that login publishes
-			members = Redis.new.smembers("chatusers").to_a
+			members = @@redis.smembers("chatusers").to_a
 			message = {
 				:type => "login",
 				:my_uid => current_user.uid,
 				:members => members
 			}
-			Redis.new.publish "chat", message.to_json
+			@@redis.publish "chat", message.to_json
 
 		end
 
 		def handle_join()
-			Redis.new.sadd("chatusers", current_user.name)
+			@@redis.sadd("chatusers", current_user.name)
 		end
 
 		def compose_message(messageFromClient, current_user)
@@ -124,8 +126,8 @@ class LoungechatsController < ApplicationController
 		def save_message_to_history
 			# Change type of message, since it's no longer a live message.
 			message[:type] = "history"
-			Redis.new.lpush("history", message.to_json)
-			Redis.new.ltrim("history", 0, @@num_history_lines)
+			@@redis.lpush("history", message.to_json)
+			@@redis.ltrim("history", 0, @@num_history_lines)
 		end
 
 		def attach_socket_handlers(tubesock, client_thread)
@@ -138,7 +140,7 @@ class LoungechatsController < ApplicationController
 					message = compose_message(messageFromClient, current_user)
 
 					# Publishing the message to the chat room
-					Redis.new.publish "chat", message.to_json
+					@@redis.publish "chat", message.to_json
 
 					# Saving message in the history
 					save_message_to_history(message)
@@ -160,8 +162,8 @@ class LoungechatsController < ApplicationController
 					current_user = nil
 					session.destroy
 					client_thread.kill
-					Redis.new.srem("chatusers", name)
-					Redis.new.publish "chat", message.to_json
+					@@redis.srem("chatusers", name)
+					@@redis.publish "chat", message.to_json
 				end
 			end
 		end
