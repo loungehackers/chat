@@ -25,13 +25,13 @@
 		width: 100%;
 
 		&::-webkit-input-placeholder {  /* chrome, safari et.c. */
-			color: #A1BEC0;
+			color: rgba(255, 255, 255, 0.38);
 		}
 		&::-moz-placeholder { /* firefox 19+ */
-			color: #A1BEC0;
+			color: rgba(255, 255, 255, 0.38);
 		}
 		&:-ms-input-placeholder {  /* ie */
-			color: #A1BEC0;
+			color: rgba(255, 255, 255, 0.38);
 		}
 	}
 }
@@ -39,17 +39,16 @@
 .output {
 	white-space: pre-wrap;
 	font-size: 13px;
-	line-height: 1.55em;
+	line-height: 1.4em;
 }
 @media (max-width: 600px), (max-height: 600px) {
 	.output {
-		font-size: 14px;
-		letter-spacing: -1px;
+		font-size: 11px;
 	}
 }
 @media (max-width: 400px), (max-height: 400px) {
 	.output {
-		font-size: 10px;
+		font-size: 9px;
 	}
 }
 @media all and (max-width: 300px), (max-height: 300px) and (-webkit-min-device-pixel-ratio: 2),(min--moz-device-pixel-ratio: 2),(min-resolution: 2dppx) {
@@ -63,17 +62,14 @@
 
 }
 .output_history {
-	color: #A1BEC0;
+	color: rgba(255, 255, 255, 0.28);
 }
 .output_logout {
 	color: rgb(129,164,0);
-	color: #E1FF71;
 }
 .output_login {
 	color: rgb(240,78,148);
-	color: #F19FC2;
 }
 .output_highlight {
 	color: rgb(47,153,220);
-	color: #83D0FF;
 }
