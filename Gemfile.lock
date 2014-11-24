@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:StefanWallin/tubesock.git
-  revision: 2582e88d1e7885db08efbfef5c57995d50f6e6da
+  revision: 63992116c4b83773de7686f7564b061d5256643f
   branch: dev
   specs:
     tubesock (0.2.4.pre.p1)
@@ -98,7 +98,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (2.9.2)
+    puma (2.10.0)
       rack (>= 1.1, < 2.0)
     rMeetup (2.0.1)
       buftok (~> 0.2)
@@ -147,7 +147,7 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.2.0)
+    sprockets-rails (2.2.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
