@@ -46,7 +46,7 @@ gem 'puma'
 gem 'redis'
 
 # Use tubesock for websockets, my own fork handles network issues more smoothly.
-gem 'tubesock', :git => 'git@github.com:StefanWallin/tubesock.git', :branch => 'exception_handling'
+gem 'tubesock', :git => 'git@github.com:StefanWallin/tubesock.git', :branch => 'dev'
 
 # Useful for debugging stuff.
 gem 'pry'
