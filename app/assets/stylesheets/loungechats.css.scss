@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .container_12 {
-	font-family: 'Andale Mono W02 Regular', Inconsolata, 'Menlo Sans', Consolas, monospace;
+	font-family: monospace;
 	text-rendering: optimizeLegibility;
 }
 .userlist.col { 
@@ -62,7 +62,7 @@
 
 }
 .output_history {
-	color: rgba(255, 255, 255, 0.28);
+	color: rgba(255, 255, 255, 0.5);
 }
 .output_logout {
 	color: rgb(129,164,0);
