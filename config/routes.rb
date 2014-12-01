@@ -7,4 +7,6 @@ LoungeChat2::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'loungechats#index'
+
+  match "*path", to: redirect("/"), via: :all
 end
