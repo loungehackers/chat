@@ -4,9 +4,9 @@ This application is deployed, but major reworks are being worked on.
 
 Branches
 ========
-  master - the currently live version
+<pre><code>  master - the currently live version
   redesign - an old attempt to sanitize the communication protocol
-  node_rework - an attempt to rewrite the client in node
+  node_rework - an attempt to rewrite the client in node</code></pre>
 
 Lounge Chat
 ===========
