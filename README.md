@@ -1,6 +1,12 @@
 Application state
 =================
-THIS APPLICATION IS NOT YET IN A USABLE STATE!
+This application is deployed, but major reworks are being worked on.
+
+Branches
+========
+  master - the currently live version
+  redesign - an old attempt to sanitize the communication protocol
+  node_rework - an attempt to rewrite the client in node
 
 Lounge Chat
 ===========
