@@ -45,6 +45,9 @@ String.prototype.insert = function (index, string) {
 		lc.socket = new WebSocket(ws_uri);
 		lc.registerHandlers();
 	};
+
+	lc.linkExtractorRegexp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
 	lc.commands = [];
 	lc.commands["login"] = function(argument) {
 		if(argument) {
@@ -70,6 +73,7 @@ String.prototype.insert = function (index, string) {
 	lc.commands["history"] = function(argument) {
 		if(argument) {
 			if(loungeChat.chat)
+				argument = argument.replace(lc.linkExtractorRegexp, "<a href='$1' target=\"_blank\">$1</a>");
 				loungeChat.chat.addMessage("", argument, "history");
 		}
 	};
@@ -88,8 +92,7 @@ String.prototype.insert = function (index, string) {
 			} else {
 				var me = $("#userlist").data("me");
 				if(loungeChat.chat) {
-					var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-					message = message.replace(exp,"<a href='$1' target=\"_blank\">$1</a>");
+					message = message.replace(lc.linkExtractorRegexp, "<a href='$1' target=\"_blank\">$1</a>");
 					loungeChat.chat.addMessage(me, message, "message");
 				}
 			}
