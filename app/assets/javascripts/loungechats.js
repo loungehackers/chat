@@ -46,7 +46,13 @@ String.prototype.insert = function (index, string) {
 		lc.registerHandlers();
 	};
 
-	lc.linkExtractorRegexp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	lc.replaceLinks = function(msg) {
+		 return msg.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target=\"_blank\">$1</a>");
+	};
+
+	lc.replaceSlashMe = function(msg) {
+		return msg.replace(/^([^:]*): \/me (.*)$/, "<span class='output_me'>$1 $2</span>");
+	};
 
 	lc.commands = [];
 	lc.commands["login"] = function(argument) {
@@ -72,9 +78,11 @@ String.prototype.insert = function (index, string) {
 
 	lc.commands["history"] = function(argument) {
 		if(argument) {
-			if(loungeChat.chat)
-				argument = argument.replace(lc.linkExtractorRegexp, "<a href='$1' target=\"_blank\">$1</a>");
+			if(loungeChat.chat) {				
+				argument = lc.replaceLinks(argument);
+				argument = lc.replaceSlashMe(argument);
 				loungeChat.chat.addMessage("", argument, "history");
+			}
 		}
 	};
 
@@ -92,11 +100,12 @@ String.prototype.insert = function (index, string) {
 			} else {
 				var me = $("#userlist").data("me");
 				if(loungeChat.chat) {
-					message = message.replace(lc.linkExtractorRegexp, "<a href='$1' target=\"_blank\">$1</a>");
+					message = lc.replaceLinks(message);
+					message = lc.replaceSlashMe(message);
 					loungeChat.chat.addMessage(me, message, "message");
 				}
 			}
-			
+
 		}
 	};
 
